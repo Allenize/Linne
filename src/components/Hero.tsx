@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowDown, FileText, Mail } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
+import Magnetic from "./Magnetic";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 30 },
@@ -281,21 +282,25 @@ export default function Hero() {
         </motion.p>
 
         <motion.div {...fadeUp(0.6)} className="flex flex-col sm:flex-row items-center gap-3">
-          <a
-            href={`/resume.pdf?v=${RESUME_VERSION}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-2.5 px-7 py-3.5 bg-stone-900 text-white rounded-full text-sm font-medium hover:bg-stone-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-          >
-            <FileText size={15} /> View Résumé
-          </a>
-          <button
-            suppressHydrationWarning
-            onClick={() => scrollTo("#contact")}
-            className="group flex items-center gap-2.5 px-7 py-3.5 bg-white text-stone-700 rounded-full text-sm font-medium border border-stone-200 hover:border-stone-400 hover:text-stone-900 transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
-          >
-            <Mail size={15} /> Get in Touch
-          </button>
+          <Magnetic strength={0.25}>
+            <a
+              href={`/resume.pdf?v=${RESUME_VERSION}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-2.5 px-7 py-3.5 bg-stone-900 text-white rounded-full text-sm font-medium hover:bg-stone-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <FileText size={15} /> View Résumé
+            </a>
+          </Magnetic>
+          <Magnetic strength={0.25}>
+            <button
+              suppressHydrationWarning
+              onClick={() => scrollTo("#contact")}
+              className="group flex items-center gap-2.5 px-7 py-3.5 bg-white/40 backdrop-blur-xl text-stone-700 rounded-full text-sm font-medium border border-white/60 hover:bg-white/70 hover:text-stone-900 transition-all duration-200 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_4px_20px_rgba(28,25,23,0.06)] hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_8px_28px_rgba(28,25,23,0.1)]"
+            >
+              <Mail size={15} /> Get in Touch
+            </button>
+          </Magnetic>
         </motion.div>
       </div>
 

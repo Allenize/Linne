@@ -4,6 +4,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import { certifications } from "@/data";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Magnetic from "./Magnetic";
 
 export default function Certifications() {
   const ref = useRef(null);
@@ -45,22 +46,26 @@ export default function Certifications() {
 
           {/* Chevron controls — mobile only */}
           <div className="flex items-center gap-2 sm:hidden">
-            <button
-              suppressHydrationWarning
-              onClick={() => scrollByCard(-1)}
-              aria-label="Previous"
-              className="w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-500 hover:text-stone-900 hover:border-stone-400 transition-all shadow-sm"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <button
-              suppressHydrationWarning
-              onClick={() => scrollByCard(1)}
-              aria-label="Next"
-              className="w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-500 hover:text-stone-900 hover:border-stone-400 transition-all shadow-sm"
-            >
-              <ChevronRight size={16} />
-            </button>
+            <Magnetic strength={0.3}>
+              <button
+                suppressHydrationWarning
+                onClick={() => scrollByCard(-1)}
+                aria-label="Previous"
+                className="w-9 h-9 rounded-full border border-white/60 bg-white/40 backdrop-blur-xl flex items-center justify-center text-stone-500 hover:text-stone-900 hover:bg-white/70 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_4px_16px_rgba(28,25,23,0.06)]"
+              >
+                <ChevronLeft size={16} />
+              </button>
+            </Magnetic>
+            <Magnetic strength={0.3}>
+              <button
+                suppressHydrationWarning
+                onClick={() => scrollByCard(1)}
+                aria-label="Next"
+                className="w-9 h-9 rounded-full border border-white/60 bg-white/40 backdrop-blur-xl flex items-center justify-center text-stone-500 hover:text-stone-900 hover:bg-white/70 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_4px_16px_rgba(28,25,23,0.06)]"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </Magnetic>
           </div>
         </motion.div>
 

@@ -4,6 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { skills } from "@/data";
 import type { JSX } from "react";
+import TiltCard from "./TiltCard";
 
 import {
   SiHtml5, SiCss, SiJavascript, SiTypescript, SiPython,
@@ -82,7 +83,7 @@ export default function Skills() {
         <div className="grid md:grid-cols-3 gap-8">
           {(Object.entries(grouped) as [keyof typeof grouped, typeof skills][]).map(
             ([category, items], colIdx) => (
-              <motion.div
+              <TiltCard
                 key={category}
                 initial={{ opacity: 0, y: 40 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -91,7 +92,8 @@ export default function Skills() {
                   delay: 0.2 + colIdx * 0.12,
                   ease: "easeOut" as const,
                 }}
-                className="bg-white rounded-2xl p-7 border border-stone-100 shadow-sm"
+                max={5}
+                className="bg-white/40 backdrop-blur-xl rounded-2xl p-7 border border-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_8px_24px_rgba(28,25,23,0.06)]"
               >
                 {/* Card header */}
                 <div className="flex items-center justify-between mb-7">
@@ -136,7 +138,7 @@ export default function Skills() {
                     );
                   })}
                 </div>
-              </motion.div>
+              </TiltCard>
             )
           )}
         </div>

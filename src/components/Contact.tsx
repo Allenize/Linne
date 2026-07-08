@@ -274,7 +274,7 @@ export default function Contact() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.35 }}
-              className="bg-white rounded-2xl border border-stone-100 p-5 sm:p-6 shadow-sm"
+              className="bg-white/40 backdrop-blur-xl rounded-2xl border border-white/60 p-5 sm:p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_8px_24px_rgba(28,25,23,0.06)]"
             >
               <h3 className="font-serif text-lg text-stone-700 uppercase tracking-widest mb-5 flex items-center gap-2">
                 <Mail size={14} className="text-stone-400" />
@@ -443,7 +443,7 @@ export default function Contact() {
                   delay: 0.3 + i * 0.1,
                   ease: "easeOut" as const,
                 }}
-                className="flex items-center gap-4 p-4 sm:p-5 bg-white rounded-2xl border border-stone-100 hover:border-stone-300 hover:shadow-md transition-all duration-300 group"
+                className="flex items-center gap-4 p-4 sm:p-5 bg-white/40 backdrop-blur-xl rounded-2xl border border-white/60 hover:bg-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_4px_16px_rgba(28,25,23,0.05)] hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_8px_24px_rgba(28,25,23,0.08)] transition-all duration-300 group"
               >
                 <div className="w-11 h-11 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-center text-stone-600 group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300 flex-shrink-0">
                   {link.icon}
