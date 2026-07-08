@@ -42,8 +42,11 @@ export const projects: Project[] = [
     title: "Artistic Vision",
     description:
       "A community-driven web platform dedicated to art appreciation and discovery, born from an idea my team and I first proposed during our 2nd year in college while preparing for our capstone project. Users can explore renowned paintings, artworks, and artists from around the world, while also contributing their own creations to a shared, curated gallery.",
-    image: "/projects/artiveu-1.png",
+    image: "/projects/artiveu-mobile-2.png",
+    logo: "/projects/logos/artivue-logo.png",
+    navIcon: "/projects/nav-icons/artivue-icon.png",
     images: [
+      "/projects/artiveu-mobile-2.png",
       "/projects/artiveu-1.png",
       "/projects/artiveu-2.png",
       "/projects/artiveu-3.png",
@@ -67,8 +70,16 @@ export const projects: Project[] = [
     description:
       "An interactive digital game adaptation of the classic Filipino literary work 'Ibong Adarna,' developed as a capstone project with my group, Magma Cube. Built using a game engine, the project reimagines the story in an engaging, accessible format while preserving its original narrative and educational value.",
     image: "/projects/adarna-desktop.jpg",
+    logo: "/projects/logos/adarna-logo.png",
+    navIcon: "/projects/nav-icons/adarna-icon.png",
     images: [
       "/projects/adarna-desktop.jpg",
+      "/projects/adarna-mobile-1.jpg",
+      "/projects/adarna-mobile-2.jpg",
+      "/projects/adarna-mobile-3.jpg",
+      "/projects/adarna-mobile-4.jpg",
+      "/projects/adarna-mobile-5.jpg",
+      "/projects/adarna-mobile-6.jpg",
     ],
     mobileImage: "/projects/adarna-mobile-1.jpg",
     mobileImages: [
@@ -89,6 +100,8 @@ export const projects: Project[] = [
     description:
       "A document management system developed during my internship at PLSP, designed to streamline the processing of student certificate requests. The system automates request handling and tracking, reducing manual paperwork and improving overall document issuance efficiency.",
     image: "/projects/plsp-dms-1.png",
+    logo: "/projects/logos/plsp-dms-logo.png",
+    navIcon: "/projects/nav-icons/plsp-dms-icon.png",
     images: [
       "/projects/plsp-dms-1.png",
       "/projects/plsp-dms-2.png",
@@ -110,6 +123,8 @@ export const projects: Project[] = [
     description:
       "A business management mobile application built with Flutter and Dart for my mom's small business. The app enables efficient inventory management, debt and payment tracking, and product organization, with all data stored securely on-device.",
     image: "/projects/reshelve-1.jpg",
+    logo: "/projects/logos/reshelve-logo.png",
+    navIcon: "/projects/nav-icons/reshelve-icon.png",
     images: [
       "/projects/reshelve-1.jpg",
       "/projects/reshelve-2.jpg",
@@ -131,6 +146,8 @@ export const projects: Project[] = [
     description:
       "A private mobile application built with Flutter and Dart for my girlfriend, Aliah Gruspe, and me. The app integrates Firebase for backend services, Cloudinary for media storage, and several third-party APIs to help us preserve shared memories, letters, moods, and milestones.",
     image: "/projects/sunflower-1.jpg",
+    logo: "/projects/logos/sunflower-logo.png",
+    navIcon: "/projects/nav-icons/sunflower-icon.png",
     images: [
       "/projects/sunflower-1.jpg",
       "/projects/sunflower-2.jpg",
@@ -151,6 +168,8 @@ export const projects: Project[] = [
     description:
       "A rental property and accommodation platform built with PHP, developed together with my groupmates from Magma Cube. The platform helps users discover, browse, and inquire about available listings, featuring detailed property pages, image galleries, and a streamlined inquiry process for a smooth user experience.",
     image: "/projects/sejour.png",
+    logo: "/projects/logos/sejour-logo.png",
+    navIcon: "/projects/nav-icons/sejour-icon.png",
     images: [
       "/projects/sejour.png",
       "/projects/sejour-2.png",
@@ -174,6 +193,8 @@ export const projects: Project[] = [
     description:
       "A personalized digital celebration website built with HTML and JavaScript, created as a birthday gift for Charlie. The site serves as an interactive memory space where friends and loved ones can share messages, upload photos, and preserve special moments together.",
     image: "/projects/barly.png",
+    logo: "/projects/logos/barly-logo.png",
+    navIcon: "/projects/nav-icons/barly-icon.png",
     mobileImage: "/projects/barly-mobile.png",
     technologies: ["HTML", "JavaScript", "CSS"],
     githubUrl: "https://github.com/Allenize/Barly-Secret",
@@ -187,6 +208,8 @@ export const projects: Project[] = [
     description:
       "A household chore-fairness mobile app built with Flutter, created to keep dishwashing duty fair and transparent among everyone living in the house. Plate has no backend and no internet dependency — devices discover and sync with each other entirely over the local Wi-Fi/LAN using a shared household code, rotating turns, tracking completion, and surfacing a fairness score completely offline.",
     image: "/projects/plate-1.jpg",
+    logo: "/projects/logos/plate-logo.png",
+    navIcon: "/projects/nav-icons/plate-icon.png",
     images: [
       "/projects/plate-1.jpg",
       "/projects/plate-2.jpg",
@@ -208,6 +231,8 @@ export const projects: Project[] = [
     description:
       "A web-based organization management platform built with PHP, JavaScript, and CSS for school organizations under CIG. The system consists of an Admin side and a Superadmin side, built by CJ and Vince during our OJT, while I developed the user-side interface for managing reports, documents, activities, and rankings.",
     image: "/projects/orghub-1.png",
+    logo: "/projects/logos/orghub-logo.png",
+    navIcon: "/projects/nav-icons/orghub-icon.png",
     images: [
       "/projects/orghub-1.png",
       "/projects/orghub-2.png",

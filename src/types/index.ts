@@ -4,6 +4,8 @@ export interface Project {
   description: string;
   image: string;
   images?: string[];
+  logo?: string;
+  navIcon?: string;
   mobileImage?: string;
   mobileImages?: string[];
   technologies: string[];

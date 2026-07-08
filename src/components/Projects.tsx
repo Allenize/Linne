@@ -2,7 +2,7 @@
 
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { ExternalLink, Monitor, Smartphone, Tablet, ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { ExternalLink, ChevronLeft, ChevronRight, Check, Expand, X } from "lucide-react";
 
 function GitHubIcon({ size = 12 }: { size?: number }) {
   return (
@@ -11,370 +11,346 @@ function GitHubIcon({ size = 12 }: { size?: number }) {
     </svg>
   );
 }
+
 import { projects } from "@/data";
+import Magnetic from "./Magnetic";
+import TiltCard from "./TiltCard";
+import type { Project } from "@/types";
 
-function DeviceShowcase({ src, alt, mobileSrc, images, mobileImages, landscapeMobile, tabletMobile }: {
-  src: string;
-  alt: string;
-  mobileSrc?: string;
-  images?: string[];
-  mobileImages?: string[];
-  landscapeMobile?: boolean;
-  tabletMobile?: boolean;
-}) {
-  const desktopSlides = images && images.length > 1 ? images : null;
-  const mobileSlides = mobileImages && mobileImages.length > 1 ? mobileImages : null;
-  const [dIdx, setDIdx] = useState(0);
-  const [mIdx, setMIdx] = useState(0);
-
-  useEffect(() => {
-    if (!desktopSlides) return;
-    const t = setInterval(() => setDIdx(i => (i + 1) % desktopSlides.length), 2500);
-    return () => clearInterval(t);
-  }, [desktopSlides]);
-
-  useEffect(() => {
-    if (!mobileSlides) return;
-    const t = setInterval(() => setMIdx(i => (i + 1) % mobileSlides.length), 3000);
-    return () => clearInterval(t);
-  }, [mobileSlides]);
-
-  const slideVariants = {
-    enter: { x: "100%", opacity: 0 },
-    center: { x: 0, opacity: 1 },
-    exit: { x: "-100%", opacity: 0 },
-  };
-
-  const currentDesktop = desktopSlides ? desktopSlides[dIdx] : src;
-  const currentMobile = mobileSlides ? mobileSlides[mIdx] : (mobileSrc ?? src);
-
-  return (
-    <div className="relative w-full h-full flex flex-col items-center justify-end select-none gap-2 pb-3">
-      <div className="relative flex-1 w-full flex items-end justify-center overflow-visible min-h-0">
-        <div
-          className="relative flex items-end gap-0 flex-shrink-0 origin-bottom"
-          style={{
-            transform: "scale(clamp(0.35, min(1, (100vw - 32px) / 480px), 1))",
-            transformOrigin: "bottom center",
-          }}
-        >
-          {/* Phone / Tablet mockup */}
-          {tabletMobile ? (
-            /* Tablet mockup */
-            <div className="relative z-20 w-[130px] mb-[20px] mr-[-50px]">
-              <div
-                className="relative shadow-[0_28px_56px_rgba(0,0,0,0.45)]"
-                style={{
-                  borderRadius: "14px",
-                  padding: "6px",
-                  background: "linear-gradient(145deg, #2a2a2a, #1a1a1a)",
-                  border: "1px solid #3d3d3d",
-                }}
-              >
-                <div className="absolute -left-[3px] top-[30px] w-[3px] h-[20px] rounded-l-full bg-[#3a3a3a]" />
-                <div className="absolute -left-[3px] top-[58px] w-[3px] h-[30px] rounded-l-full bg-[#3a3a3a]" />
-                <div className="absolute -right-[3px] top-[40px] w-[3px] h-[36px] rounded-r-full bg-[#3a3a3a]" />
-                <div className="relative bg-black overflow-hidden" style={{ borderRadius: "10px" }}>
-                  <div className="absolute top-[5px] left-1/2 -translate-x-1/2 z-10 w-[5px] h-[5px] rounded-full bg-[#1a1a1a]" />
-                  <div className="relative overflow-hidden" style={{ aspectRatio: "3/4", borderRadius: "10px" }}>
-                    <AnimatePresence mode="wait">
-                      <motion.img
-                        key={mIdx}
-                        src={currentMobile}
-                        alt={alt}
-                        variants={slideVariants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
-                        className="absolute inset-0 w-full h-full object-contain"
-                      />
-                    </AnimatePresence>
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] pointer-events-none" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : landscapeMobile ? (
-            <div className="relative z-20 self-center" style={{ width: "210px", marginRight: "-120px", marginBottom: "18px" }}>
-              <div
-                className="relative shadow-[0_28px_56px_rgba(0,0,0,0.45)]"
-                style={{
-                  borderRadius: "13px",
-                  padding: "5px",
-                  background: "linear-gradient(145deg, #2a2a2a, #1a1a1a)",
-                  border: "1px solid #3d3d3d",
-                }}
-              >
-                <div className="absolute -top-[3px] left-[48px] h-[3px] w-[16px] rounded-t-full bg-[#3a3a3a]" />
-                <div className="absolute -top-[3px] left-[72px] h-[3px] w-[26px] rounded-t-full bg-[#3a3a3a]" />
-                <div className="absolute -bottom-[3px] left-[60px] h-[3px] w-[32px] rounded-b-full bg-[#3a3a3a]" />
-                <div className="relative bg-black overflow-hidden" style={{ borderRadius: "9px" }}>
-                  <div className="absolute left-[6px] top-1/2 -translate-y-1/2 z-10 h-[26px] w-[6px] rounded-full bg-black" />
-                  <div className="relative overflow-hidden" style={{ aspectRatio: "19.5/9", borderRadius: "9px" }}>
-                    <AnimatePresence mode="wait">
-                      <motion.img
-                        key={mIdx}
-                        src={currentMobile}
-                        alt={alt}
-                        variants={slideVariants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
-                        className="absolute inset-0 w-full h-full object-contain"
-                      />
-                    </AnimatePresence>
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] pointer-events-none" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-          <div className="relative z-20 w-[112px] mb-[20px] mr-[-50px]">
-            <div
-              className="relative shadow-[0_28px_56px_rgba(0,0,0,0.45)]"
-              style={{
-                borderRadius: "13px",
-                padding: "5px",
-                background: "linear-gradient(145deg, #2a2a2a, #1a1a1a)",
-                border: "1px solid #3d3d3d",
-              }}
-            >
-              <div className="absolute -left-[3px] top-[48px] w-[3px] h-[16px] rounded-l-full bg-[#3a3a3a]" />
-              <div className="absolute -left-[3px] top-[72px] w-[3px] h-[26px] rounded-l-full bg-[#3a3a3a]" />
-              <div className="absolute -right-[3px] top-[60px] w-[3px] h-[32px] rounded-r-full bg-[#3a3a3a]" />
-              <div className="relative bg-black overflow-hidden" style={{ borderRadius: "9px" }}>
-                <div className="absolute top-[6px] left-1/2 -translate-x-1/2 z-10 w-[26px] h-[6px] rounded-full bg-black" />
-                <div className="relative overflow-hidden" style={{ aspectRatio: "9/19.5", borderRadius: "9px" }}>
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={mIdx}
-                      src={currentMobile}
-                      alt={alt}
-                      variants={slideVariants}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{ duration: 0.4, ease: "easeInOut" }}
-                      className="absolute inset-0 w-full h-full object-contain"
-                    />
-                  </AnimatePresence>
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] pointer-events-none" />
-                </div>
-              </div>
-            </div>
-          </div>
-          )}
-
-          {/* Laptop */}
-          <div className="relative w-[370px] flex-shrink-0">
-            <div className="relative bg-[#1a1a1a] rounded-t-[14px] rounded-b-[2px] pt-[11px] px-[11px] pb-[4px] shadow-[0_24px_64px_rgba(0,0,0,0.4)]">
-              <div className="absolute top-[4px] left-1/2 -translate-x-1/2">
-                <div className="w-[5px] h-[5px] rounded-full bg-[#3a3a3a]" />
-              </div>
-              <div className="relative overflow-hidden rounded-[4px] bg-black aspect-[16/10]">
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={dIdx}
-                    src={currentDesktop}
-                    alt={alt}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                    className="absolute inset-0 w-full h-full object-contain"
-                  />
-                </AnimatePresence>
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-white/[0.06] pointer-events-none" />
-              </div>
-            </div>
-            <div className="h-[2px] bg-[#2a2a2a]" />
-            <div
-              className="relative h-[12px] rounded-b-[8px] shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
-              style={{ background: "linear-gradient(to bottom, #c8c8c8, #b0b0b0)" }}
-            >
-              <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] rounded-full bg-black/10" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Labels */}
-      <div className="flex items-center gap-4 flex-shrink-0">
-        <span className="flex items-center gap-1 text-[9px] text-stone-400 font-medium">
-          <Monitor size={9} /> Desktop
-        </span>
-        <span className="flex items-center gap-1 text-[9px] text-stone-400 font-medium">
-          {tabletMobile ? <Tablet size={9} /> : <Smartphone size={9} />} {tabletMobile ? "Tablet" : "Mobile"}
-        </span>
-      </div>
-    </div>
-  );
+/** Desktop screenshots only — mobile shots are intentionally excluded. */
+function getGalleryImages(p: Project): string[] {
+  return p.images && p.images.length > 0 ? p.images : [p.image];
 }
 
-function MobileOnlyShowcase({ src, alt, src2, images }: { src: string; alt: string; src2?: string; images?: string[] }) {
-  const slides = images && images.length > 1 ? images : null;
-  const [idx, setIdx] = useState(0);
-  const [dir, setDir] = useState(1);
-
-  useEffect(() => {
-    if (!slides) return;
-    const t = setInterval(() => {
-      setDir(1);
-      setIdx(i => (i + 1) % slides.length);
-    }, 2500);
-    return () => clearInterval(t);
-  }, [slides]);
-
-  const slideVariants = {
-    enter: (d: number) => ({ x: d > 0 ? "100%" : "-100%", opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (d: number) => ({ x: d > 0 ? "-100%" : "100%", opacity: 0 }),
-  };
-
-  const Phone = ({ image, small }: { image: string; small?: boolean }) => (
-    <div
-      className="relative flex-shrink-0"
-      style={{ width: src2 ? (small ? "clamp(65px, 22vw, 95px)" : "clamp(75px, 26vw, 110px)") : "clamp(80px, 30vw, 115px)" }}
+/** Logo cover for a project. Instead of a cropped screenshot, this shows
+ *  the app's actual logo mark centered on a soft neutral card — clicking
+ *  it opens the full screenshot gallery. */
+function ProjectImage({ logo, alt, count, onOpen }: { logo: string; alt: string; count: number; onOpen: () => void }) {
+  return (
+    <button
+      suppressHydrationWarning
+      onClick={onOpen}
+      aria-label={`View all photos of ${alt}`}
+      className="group relative flex items-center justify-center w-full h-full overflow-hidden cursor-zoom-in"
+      style={{ background: "linear-gradient(145deg, #faf9f7, #efece6)" }}
     >
-      <div
-        className="relative shadow-[0_24px_48px_rgba(0,0,0,0.38)]"
-        style={{
-          borderRadius: `calc(${src2 ? (small ? "clamp(65px,22vw,95px)" : "clamp(75px,26vw,110px)") : "clamp(80px,30vw,115px)"} * 0.12)`,
-          padding: `calc(${src2 ? (small ? "clamp(65px,22vw,95px)" : "clamp(75px,26vw,110px)") : "clamp(80px,30vw,115px)"} * 0.046)`,
-          background: "linear-gradient(145deg, #3a2f3f, #221b28)",
-          border: "1.5px solid #4d4055",
-        }}
-      >
-        <div className="absolute -left-[3px] top-[14%] w-[3px] h-[8%] rounded-l-full" style={{ background: "linear-gradient(to right, #3a2f3f, #4a3f50)" }} />
-        <div className="absolute -left-[3px] top-[26%] w-[3px] h-[14%] rounded-l-full" style={{ background: "linear-gradient(to right, #3a2f3f, #4a3f50)" }} />
-        <div className="absolute -right-[3px] top-[20%] w-[3px] h-[18%] rounded-r-full" style={{ background: "linear-gradient(to left, #3a2f3f, #4a3f50)" }} />
-        <div
-          className="relative bg-black overflow-hidden"
-          style={{ borderRadius: `calc(${src2 ? (small ? "clamp(65px,22vw,95px)" : "clamp(75px,26vw,110px)") : "clamp(80px,30vw,115px)"} * 0.08)` }}
-        >
-          <div className="absolute top-[6px] left-1/2 -translate-x-1/2 z-10 w-[30%] h-[6px] rounded-full bg-black" />
-          <div
-            className="relative overflow-hidden"
-            style={{
-              aspectRatio: "9/19.5",
-              borderRadius: `calc(${src2 ? (small ? "clamp(65px,22vw,95px)" : "clamp(75px,26vw,110px)") : "clamp(80px,30vw,115px)"} * 0.08)`,
-            }}
-          >
-            {slides ? (
-              <AnimatePresence custom={dir} mode="wait">
-                <motion.img
-                  key={idx}
-                  src={slides[idx]}
-                  alt={`${alt} screen ${idx + 1}`}
-                  custom={dir}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                  className="absolute inset-0 w-full h-full object-contain"
-                />
-              </AnimatePresence>
-            ) : (
-              <img src={image} alt={alt} className="w-full h-full object-contain" />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.06] pointer-events-none" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="relative w-full h-full flex flex-col items-center justify-end select-none gap-3 pb-3">
-      <div className="relative flex-1 w-full flex items-end justify-center min-h-0 gap-3">
-        <Phone image={src} />
-        {src2 && <Phone image={src2} small />}
-      </div>
-      <div className="flex items-center gap-1 text-[9px] text-stone-400 font-medium flex-shrink-0">
-        <Smartphone size={9} /> Mobile
-      </div>
-    </div>
+      <img
+        src={logo}
+        alt={`${alt} logo`}
+        className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+      />
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+      {count > 1 && (
+        <span className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 text-stone-800 text-[11px] font-medium opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 shadow-lg">
+          <Expand size={12} /> View all {count} photos
+        </span>
+      )}
+    </button>
   );
 }
 
-function DesktopOnlyShowcase({ src, alt, images }: { src: string; alt: string; images?: string[] }) {
-  const slides = images && images.length > 1 ? images : null;
-  const [idx, setIdx] = useState(0);
-
+/** Full-screen album lightbox — opened by clicking a project's image. */
+function Lightbox({
+  images,
+  index,
+  alt,
+  onClose,
+  onPrev,
+  onNext,
+  onSelect,
+}: {
+  images: string[];
+  index: number;
+  alt: string;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  onSelect: (i: number) => void;
+}) {
   useEffect(() => {
-    if (!slides) return;
-    const t = setInterval(() => setIdx(i => (i + 1) % slides.length), 2500);
-    return () => clearInterval(t);
-  }, [slides]);
-
-  const slideVariants = {
-    enter: { x: "100%", opacity: 0 },
-    center: { x: 0, opacity: 1 },
-    exit: { x: "-100%", opacity: 0 },
-  };
-
-  const current = slides ? slides[idx] : src;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") onNext();
+      if (e.key === "ArrowLeft") onPrev();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose, onNext, onPrev]);
 
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-end select-none gap-2 pb-3">
-      <div className="relative flex-1 w-full flex items-end justify-center overflow-visible min-h-0">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      className="fixed inset-0 z-[100] bg-stone-950/95 backdrop-blur-sm flex items-center justify-center p-4 sm:p-10"
+      onClick={onClose}
+    >
+      <button
+        suppressHydrationWarning
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        aria-label="Close gallery"
+        className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
+      >
+        <X size={18} />
+      </button>
+
+      <span className="absolute top-6 left-6 text-white/70 text-xs font-mono tabular-nums z-10">
+        {alt} — {String(index + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+      </span>
+
+      {images.length > 1 && (
+        <>
+          <button
+            suppressHydrationWarning
+            onClick={(e) => { e.stopPropagation(); onPrev(); }}
+            aria-label="Previous photo"
+            className="absolute left-3 sm:left-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <button
+            suppressHydrationWarning
+            onClick={(e) => { e.stopPropagation(); onNext(); }}
+            aria-label="Next photo"
+            className="absolute right-3 sm:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
+          >
+            <ChevronRight size={20} />
+          </button>
+        </>
+      )}
+
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={index}
+          src={images[index]}
+          alt={alt}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          onClick={(e) => e.stopPropagation()}
+          className="max-w-full max-h-[80vh] sm:max-h-[85vh] object-contain rounded-lg shadow-2xl"
+        />
+      </AnimatePresence>
+
+      {images.length > 1 && (
         <div
-          className="relative flex-shrink-0 origin-bottom"
-          style={{
-            transform: "scale(clamp(0.4, min(1, (100vw - 32px) / 385px), 1))",
-            transformOrigin: "bottom center",
-          }}
+          className="absolute bottom-6 inset-x-0 flex items-center justify-center gap-1.5 z-10"
+          onClick={(e) => e.stopPropagation()}
         >
-          <div className="relative w-[370px]">
-            <div className="relative bg-[#1a1a1a] rounded-t-[14px] rounded-b-[2px] pt-[11px] px-[11px] pb-[4px] shadow-[0_24px_64px_rgba(0,0,0,0.4)]">
-              <div className="absolute top-[4px] left-1/2 -translate-x-1/2">
-                <div className="w-[5px] h-[5px] rounded-full bg-[#3a3a3a]" />
-              </div>
-              <div className="relative overflow-hidden rounded-[4px] bg-black aspect-[16/10]">
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={idx}
-                    src={current}
-                    alt={alt}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                    className="absolute inset-0 w-full h-full object-contain"
-                  />
-                </AnimatePresence>
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-white/[0.06] pointer-events-none" />
-              </div>
-            </div>
-            <div className="h-[2px] bg-[#2a2a2a]" />
-            <div
-              className="relative h-[12px] rounded-b-[8px] shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
-              style={{ background: "linear-gradient(to bottom, #c8c8c8, #b0b0b0)" }}
-            >
-              <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-[40px] h-[4px] rounded-full bg-black/10" />
-            </div>
-          </div>
+          {images.map((_, i) => (
+            <button
+              suppressHydrationWarning
+              key={i}
+              onClick={() => onSelect(i)}
+              aria-label={`Go to photo ${i + 1}`}
+              className={`transition-all duration-300 rounded-full ${
+                i === index ? "w-5 h-1.5 bg-white" : "w-1.5 h-1.5 bg-white/40 hover:bg-white/70"
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+/** Type + counter badges floating over the image, with a scrim so they
+ *  stay legible over any screenshot. */
+function StageBadges({ type }: { type: string; current: number; total: number }) {
+  return (
+    <>
+      <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/35 to-transparent pointer-events-none z-20" />
+      <div className="absolute inset-x-0 top-0 z-30 flex items-start justify-between p-4 sm:p-5">
+        <span className="text-[10px] font-medium px-2.5 py-1 rounded-full border border-white/20 bg-black/30 backdrop-blur-sm text-white">
+          {type}
+        </span>
+      </div>
+    </>
+  );
+}
+
+/** Description, features, stack and action buttons for the current
+ *  project. `stacked` renders everything in a single column (used for
+ *  the narrower portrait split-card); otherwise it's a two-column
+ *  case-study layout. */
+function InfoPanel({
+  project,
+  expanded,
+  setExpanded,
+  siblingGroup,
+  onSelectSibling,
+}: {
+  project: Project;
+  expanded: boolean;
+  setExpanded: (fn: (v: boolean) => boolean) => void;
+  siblingGroup: number[] | null;
+  onSelectSibling: (id: number) => void;
+}) {
+  return (
+    <div className="flex flex-col h-full justify-between gap-6">
+      {/* Title, description, features */}
+      <div>
+        <h3 className="font-serif text-3xl sm:text-4xl text-stone-900 mb-3 leading-snug">
+          {project.title}
+        </h3>
+
+        <p className={`text-sm text-stone-500 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}>
+          {project.description}
+        </p>
+        <button
+          suppressHydrationWarning
+          onClick={() => setExpanded((v) => !v)}
+          className="mt-2 text-[11px] font-medium text-stone-400 hover:text-stone-700 transition-colors underline underline-offset-2"
+        >
+          {expanded ? "Show less" : "Read more"}
+        </button>
+
+        <div className="mt-6">
+          <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-3">Key Features</p>
+          <ul className="grid grid-cols-1 gap-x-4 gap-y-2">
+            {project.features.slice(0, 6).map((f) => (
+              <li key={f} className="flex items-center gap-2 text-xs text-stone-500">
+                <Check size={11} className="text-stone-300 flex-shrink-0" />
+                {f}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
-      <div className="flex items-center gap-1 text-[9px] text-stone-400 font-medium flex-shrink-0">
-        <Monitor size={9} /> Desktop
+
+      {/* Tech stack + actions */}
+      <div className="flex flex-col justify-between gap-6">
+        <div>
+          <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-3">Stack</p>
+          <div className="flex flex-wrap gap-1.5">
+            {project.technologies.map((tech) => (
+              <span
+                key={tech}
+                className="px-2.5 py-1 text-[10px] font-medium text-stone-600 bg-white/60 backdrop-blur-sm border border-stone-200/70 rounded-full"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between gap-2.5 flex-wrap">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            {project.githubUrl ? (
+              <Magnetic strength={0.2}>
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-stone-900 text-white rounded-full text-xs font-medium hover:bg-stone-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  <GitHubIcon size={12} /> GitHub
+                </a>
+              </Magnetic>
+            ) : (
+              <span className="flex items-center gap-2 px-4 py-2.5 bg-stone-100 text-stone-400 rounded-full text-xs font-medium cursor-not-allowed select-none">
+                <GitHubIcon size={12} /> No Public Repo
+              </span>
+            )}
+            {project.liveUrl && (
+              <Magnetic strength={0.2}>
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-white text-stone-700 rounded-full text-xs font-medium border border-stone-200 hover:border-stone-400 hover:text-stone-900 transition-all duration-200"
+                >
+                  <ExternalLink size={12} /> Live Demo
+                </a>
+              </Magnetic>
+            )}
+          </div>
+
+          {siblingGroup && (
+            <SiblingProjectDock group={siblingGroup} activeId={project.id} onSelect={onSelectSibling} />
+          )}
+        </div>
       </div>
     </div>
   );
 }
-
-const mobileOnlyProjects = ["Reshelve", "Sunflower", "Plate"];
-const desktopOnlyProjects = ["PLSP DMS"];
-const landscapeProjects = ["Adarna"];
-const tabletProjects = ["Sejour"];
 
 // Swipe threshold in pixels
 const SWIPE_THRESHOLD = 50;
+
+/** Groups related mini-projects under a primary project. The primary
+ *  keeps its full slot in the sidebar/mobile nav; the children are
+ *  hidden from that nav and instead surface as small icon buttons in
+ *  the bottom-right corner of the image, on the primary card and on
+ *  each other's cards, so you can hop between the family of apps. */
+const PROJECT_GROUPS: Record<number, number[]> = {
+  4: [5, 9, 7], // Reshelve -> Sunflower, Plate, Barly
+  1: [6],       // Artistic Vision -> Sejour
+  3: [8],       // PLSP DMS -> OrgHub
+};
+
+const GROUPED_CHILD_IDS = new Set(Object.values(PROJECT_GROUPS).flat());
+
+/** Returns the full sibling group (primary id first, then children) for
+ *  a given project id, or null if that project isn't part of a group. */
+function getProjectGroup(id: number): number[] | null {
+  if (PROJECT_GROUPS[id]) return [id, ...PROJECT_GROUPS[id]];
+  for (const [primary, kids] of Object.entries(PROJECT_GROUPS)) {
+    if (kids.includes(id)) return [Number(primary), ...kids];
+  }
+  return null;
+}
+
+/** Small cluster of sibling-project icon buttons anchored to a corner
+ *  of the image, letting you switch between a primary project and its
+ *  related mini-apps without them cluttering the main nav. */
+function SiblingProjectDock({
+  group,
+  activeId,
+  onSelect,
+}: {
+  group: number[];
+  activeId: number;
+  onSelect: (id: number) => void;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      {group.map((gid) => {
+        const gp = projects.find((p) => p.id === gid);
+        if (!gp) return null;
+        const isActive = gid === activeId;
+        return (
+          <button
+            suppressHydrationWarning
+            key={gid}
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onSelect(gid); }}
+            aria-label={`View ${gp.title}`}
+            aria-current={isActive}
+            title={gp.title}
+            className={`w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm shadow-lg flex items-center justify-center p-1.5 ring-2 transition-all duration-300 ${
+              isActive ? "ring-stone-900 scale-105" : "ring-transparent hover:ring-stone-300 hover:scale-105"
+            }`}
+          >
+            {gp.navIcon && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={gp.navIcon}
+                alt=""
+                aria-hidden="true"
+                className={`w-full h-full object-contain transition-all duration-300 ${
+                  isActive ? "opacity-100 brightness-100" : "opacity-90 brightness-0 hover:opacity-100 hover:brightness-100"
+                }`}
+              />
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function Projects() {
   const ref = useRef(null);
@@ -382,14 +358,38 @@ export default function Projects() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   // Touch swipe state
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
-  const prev = () => { setDirection(-1); setExpanded(false); setCurrent((c) => (c - 1 + projects.length) % projects.length); };
-  const next = () => { setDirection(1);  setExpanded(false); setCurrent((c) => (c + 1) % projects.length); };
-  const goTo = (i: number) => { setDirection(i > current ? 1 : -1); setExpanded(false); setCurrent(i); };
+  const prev = () => { setDirection(-1); setExpanded(false); setLightboxOpen(false); setCurrent((c) => (c - 1 + projects.length) % projects.length); };
+  const next = () => { setDirection(1);  setExpanded(false); setLightboxOpen(false); setCurrent((c) => (c + 1) % projects.length); };
+  const goTo = (i: number) => { setDirection(i > current ? 1 : -1); setExpanded(false); setLightboxOpen(false); setCurrent(i); };
+
+  const project = projects[current];
+  const galleryImages = getGalleryImages(project);
+
+  // Keyboard navigation: arrow keys browse the lightbox album when it's
+  // open, otherwise they switch between projects.
+  useEffect(() => {
+    if (!isInView) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (lightboxOpen) {
+        if (e.key === "Escape") setLightboxOpen(false);
+        if (e.key === "ArrowRight") setLightboxIndex((i) => (i + 1) % galleryImages.length);
+        if (e.key === "ArrowLeft") setLightboxIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length);
+        return;
+      }
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInView, current, lightboxOpen, galleryImages.length]);
 
   // Touch handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -410,12 +410,10 @@ export default function Projects() {
     touchStartY.current = null;
   };
 
-  const project = projects[current];
-
   const slideVariants = {
-    enter:  (dir: number) => ({ x: dir > 0 ? 48 : -48, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit:   (dir: number) => ({ x: dir > 0 ? -48 : 48, opacity: 0 }),
+    enter:  { opacity: 0 },
+    center: { opacity: 1 },
+    exit:   { opacity: 0 },
   };
 
   return (
@@ -436,196 +434,186 @@ export default function Projects() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" as const }}
-          className="flex items-end justify-between mb-8 md:mb-10"
+          className="mb-10 md:mb-14"
         >
           <h2 className="font-serif text-4xl md:text-5xl font-normal text-stone-900 leading-tight">
             Selected work.
           </h2>
-          <span className="text-sm text-stone-400 hidden md:block tabular-nums">
-            {current + 1} / {projects.length}
-          </span>
+          <p className="text-sm text-stone-400 mt-2 max-w-md">
+            A collection of platforms, apps, and tools I&apos;ve designed and built — spanning school, work, and personal projects.
+          </p>
         </motion.div>
 
-        {/* Card — swipeable on touch devices */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" as const }}
-          className="bg-white rounded-3xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 touch-pan-y"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* Stack on mobile, side-by-side on lg+ */}
-          <div className="flex flex-col lg:grid lg:grid-cols-[1fr_380px] lg:h-[420px]">
+        <div className="grid lg:grid-cols-[220px_1fr] gap-6 lg:gap-10">
 
-            {/* Device showcase */}
-            <div className="relative bg-gradient-to-br from-stone-50 to-stone-100 h-[320px] sm:h-[360px] lg:h-full p-3 sm:p-6 lg:p-8 overflow-hidden">
-              <div
-                className="absolute inset-0 opacity-[0.04] overflow-hidden rounded-tl-3xl rounded-tr-3xl lg:rounded-tr-none lg:rounded-bl-3xl"
-                style={{
-                  backgroundImage: "radial-gradient(circle, #78716c 1px, transparent 1px)",
-                  backgroundSize: "24px 24px",
-                }}
-              />
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                  key={current}
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="relative z-10 w-full h-full"
-                >
-                  {mobileOnlyProjects.includes(project.title)
-                    ? <MobileOnlyShowcase src={project.image} alt={project.title} src2={project.mobileImage} images={project.images} />
-                    : desktopOnlyProjects.includes(project.title)
-                    ? <DesktopOnlyShowcase src={project.image} alt={project.title} images={project.images} />
-                    : <DeviceShowcase src={project.image} alt={project.title} mobileSrc={project.mobileImage} images={project.images} mobileImages={project.mobileImages} landscapeMobile={landscapeProjects.includes(project.title)} tabletMobile={tabletProjects.includes(project.title)} />
-                  }
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Info panel */}
-            <div className="flex flex-col border-t lg:border-t-0 lg:border-l border-stone-100 overflow-hidden">
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                  key={current}
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="flex flex-col h-full p-5 sm:p-6 lg:p-8"
-                >
-                  {/* Top */}
-                  <div className="flex-1 overflow-hidden flex flex-col">
-                    {/* Number + type */}
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-mono text-stone-300 tabular-nums">
-                        {String(current + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
-                      </span>
-                      <span className="text-[10px] font-medium px-2.5 py-1 rounded-full border border-stone-200 bg-stone-50 text-stone-600">
-                        {project.type}
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="font-serif text-2xl text-stone-900 mb-2 leading-snug">
-                      {project.title}
-                    </h3>
-
-                    {/* Description */}
-                    <div className="mb-4">
-                      <p className={`text-sm text-stone-500 leading-relaxed ${expanded ? "" : "line-clamp-2"}`}>
-                        {project.description}
-                      </p>
-                      <button suppressHydrationWarning
-                        onClick={() => setExpanded((v) => !v)}
-                        className="mt-1 text-[11px] font-medium text-stone-400 hover:text-stone-700 transition-colors underline underline-offset-2"
-                      >
-                        {expanded ? "Show less" : "Show more"}
-                      </button>
-                    </div>
-
-                    {/* Key features */}
-                    <div className="mb-4">
-                      <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-2">Key Features</p>
-                      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1">
-                        {project.features.slice(0, 4).map((f) => (
-                          <li key={f} className="flex items-center gap-2 text-xs text-stone-500">
-                            <Check size={11} className="text-stone-300 flex-shrink-0" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {/* Tech badges */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {project.technologies.map((tech) => (
-                        <span key={tech} className="px-2 py-0.5 text-[10px] font-medium text-stone-500 bg-stone-50 border border-stone-100 rounded-full">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Buttons */}
-                  <div className="flex-shrink-0 pt-4 mt-4 border-t border-stone-50 flex items-center gap-2.5 flex-wrap">
-                    {project.githubUrl ? (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2.5 bg-stone-900 text-white rounded-full text-xs font-medium hover:bg-stone-700 transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
-                      >
-                        <GitHubIcon size={12} /> GitHub
-                      </a>
-                    ) : (
-                      <span className="flex items-center gap-2 px-4 py-2.5 bg-stone-100 text-stone-400 rounded-full text-xs font-medium cursor-not-allowed select-none">
-                        <GitHubIcon size={12} /> No Public Repo
-                      </span>
-                    )}
-                    {project.liveUrl && (
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2.5 bg-white text-stone-700 rounded-full text-xs font-medium border border-stone-200 hover:border-stone-400 hover:text-stone-900 transition-all duration-200 hover:-translate-y-0.5"
-                      >
-                        <ExternalLink size={12} /> Live Demo
-                      </a>
-                    )}
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-          </div>
-        </motion.div>
-
-        {/* Controls */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="flex items-center justify-between mt-5 md:mt-6"
-        >
-          {/* Dots */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {projects.map((_, i) => (
-              <button suppressHydrationWarning
-                key={i}
+          {/* Index nav — desktop only, sticky project list */}
+          <motion.nav
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="hidden lg:flex flex-col gap-0.5 sticky top-28 self-start"
+          >
+            {projects
+              .map((p, i) => ({ p, i }))
+              .filter(({ p }) => !GROUPED_CHILD_IDS.has(p.id))
+              .map(({ p, i }) => (
+              <button
+                suppressHydrationWarning
+                key={p.id}
                 onClick={() => goTo(i)}
-                className={`transition-all duration-300 rounded-full ${
-                  i === current ? "w-6 h-2 bg-stone-900" : "w-2 h-2 bg-stone-200 hover:bg-stone-400"
+                className="group relative flex items-center gap-3 py-2.5 text-left"
+              >
+                <span
+                  className={`relative w-7 h-7 flex-shrink-0 flex items-center justify-center transition-all duration-300 ${
+                    i === current ? "scale-105" : ""
+                  }`}
+                >
+                  {p.navIcon && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={p.navIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className={`w-full h-full object-contain transition-all duration-300 ${
+                        i === current ? "opacity-100 brightness-100" : "opacity-90 brightness-0 group-hover:opacity-100 group-hover:brightness-100"
+                      }`}
+                    />
+                  )}
+                </span>
+                <span className="flex flex-col">
+                  <span
+                    className={`text-sm leading-tight transition-colors duration-300 ${
+                      i === current ? "text-stone-900 font-medium" : "text-stone-400 group-hover:text-stone-700"
+                    }`}
+                  >
+                    {p.title}
+                  </span>
+                  <span
+                    className={`text-[10px] font-medium transition-all duration-300 overflow-hidden ${
+                      i === current
+                        ? "max-h-6 mt-1 px-2 py-0.5 rounded-full border border-stone-200/70 bg-white/60 backdrop-blur-sm text-stone-500 inline-block w-fit"
+                        : "max-h-0 text-stone-300"
+                    }`}
+                  >
+                    {p.type}
+                  </span>
+                </span>
+              </button>
+            ))}
+          </motion.nav>
+
+          {/* Mobile index — horizontal scroll chips */}
+          <div className="flex lg:hidden gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-1">
+            {projects
+              .map((p, i) => ({ p, i }))
+              .filter(({ p }) => !GROUPED_CHILD_IDS.has(p.id))
+              .map(({ p, i }) => (
+              <button
+                suppressHydrationWarning
+                key={p.id}
+                onClick={() => goTo(i)}
+                className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all duration-300 ${
+                  i === current
+                    ? "bg-stone-900 text-white border-stone-900"
+                    : "bg-white text-stone-500 border-stone-200 hover:border-stone-400"
                 }`}
-              />
+              >
+                {p.title}
+              </button>
             ))}
           </div>
 
-          {/* Chevrons */}
-          <div className="flex items-center gap-2">
-            <button suppressHydrationWarning
-              onClick={prev}
-              className="w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-500 hover:text-stone-900 hover:border-stone-400 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5"
+          {/* Main stage */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" as const }}
+          >
+            <div
+              className="touch-pan-y"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
-              <ChevronLeft size={16} />
-            </button>
-            <button suppressHydrationWarning
-              onClick={next}
-              className="w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-500 hover:text-stone-900 hover:border-stone-400 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </motion.div>
+            <TiltCard max={2.5} className="block">
+              <div
+                className="relative bg-white rounded-[2rem] border border-stone-100 overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-500"
+                style={{
+                  WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+                  maskImage: "radial-gradient(white, black)",
+                }}
+              >
+              {/* Split layout — image gallery left, info right, for every project */}
+              <div className="grid md:grid-cols-2 md:h-[560px]">
+                <div className="relative h-[380px] sm:h-[460px] md:h-full">
+                  <AnimatePresence mode="wait" custom={direction}>
+                    <motion.div
+                      key={current}
+                      custom={direction}
+                      variants={slideVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="absolute inset-0 z-10"
+                    >
+                      <ProjectImage
+                        logo={galleryImages[0]}
+                        alt={project.title}
+                        count={galleryImages.length}
+                        onOpen={() => { setLightboxIndex(0); setLightboxOpen(true); }}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                  <StageBadges type={project.type} current={current + 1} total={projects.length} />
+                </div>
+
+                <div className="border-t md:border-t-0 md:border-l border-stone-100 md:h-full md:overflow-y-auto">
+                  <AnimatePresence mode="wait" custom={direction}>
+                    <motion.div
+                      key={current}
+                      custom={direction}
+                      variants={slideVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="h-full p-6 sm:p-8 lg:p-10"
+                    >
+                      <InfoPanel
+                        project={project}
+                        expanded={expanded}
+                        setExpanded={setExpanded}
+                        siblingGroup={getProjectGroup(project.id)}
+                        onSelectSibling={(id) => {
+                          const idx = projects.findIndex((p) => p.id === id);
+                          if (idx !== -1) goTo(idx);
+                        }}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+              </div>
+            </TiltCard>
+            </div>
+          </motion.div>
+        </div>
 
       </div>
+
+      <AnimatePresence>
+        {lightboxOpen && (
+          <Lightbox
+            images={galleryImages}
+            index={lightboxIndex}
+            alt={project.title}
+            onClose={() => setLightboxOpen(false)}
+            onPrev={() => setLightboxIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length)}
+            onNext={() => setLightboxIndex((i) => (i + 1) % galleryImages.length)}
+            onSelect={setLightboxIndex}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
-}
+} 

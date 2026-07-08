@@ -87,7 +87,7 @@ function EducationCard({ edu, index, isInView }: {
               transition={{ duration: 0.3, ease: "easeOut" as const }}
               className="sm:hidden overflow-hidden"
             >
-              <div className="flex gap-3 overflow-x-auto pt-3 pb-1 -mx-1 px-1 snap-x snap-mandatory">
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pt-3 pb-1 -mx-1 px-1 snap-x snap-mandatory">
                 {edu.images.map((img, i) => (
                   <div
                     key={i}
