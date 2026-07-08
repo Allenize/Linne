@@ -1,0 +1,146 @@
+"use client";
+
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { skills } from "@/data";
+import type { JSX } from "react";
+
+import {
+  SiHtml5, SiCss, SiJavascript, SiTypescript, SiPython,
+  SiCplusplus, SiPhp, SiReact, SiNextdotjs, SiNodedotjs,
+  SiPostgresql, SiTailwindcss, SiMysql, SiGit, SiGithub,
+  SiVscodium, SiFigma, SiPostman, SiOnlyoffice,
+  SiGo, SiFlutter, SiAngular, SiFirebase, SiVercel,
+} from "react-icons/si";
+
+const skillMeta: Record<string, { icon: JSX.Element; color: string }> = {
+  HTML:             { icon: <SiHtml5 />,            color: "#E34F26" },
+  CSS:              { icon: <SiCss />,             color: "#1572B6" },
+  JavaScript:       { icon: <SiJavascript />,       color: "#F7DF1E" },
+  TypeScript:       { icon: <SiTypescript />,       color: "#3178C6" },
+  Python:           { icon: <SiPython />,           color: "#3776AB" },
+  Go:               { icon: <SiGo />,             color: "#00ACD7" },
+  "C++":            { icon: <SiCplusplus />,        color: "#00599C" },
+  PHP:              { icon: <SiPhp />,              color: "#777BB4" },
+  React:            { icon: <SiReact />,            color: "#61DAFB" },
+  "Next.js":        { icon: <SiNextdotjs />,        color: "#000000" },
+  "Node.js":        { icon: <SiNodedotjs />,        color: "#339933" },
+  Flutter:          { icon: <SiFlutter />,          color: "#02569B" },
+  Angular:          { icon: <SiAngular />,          color: "#DD0031" },
+  PostgreSQL:       { icon: <SiPostgresql />,       color: "#4169E1" },
+  "Tailwind CSS":   { icon: <SiTailwindcss />,      color: "#06B6D4" },
+  MySQL:            { icon: <SiMysql />,            color: "#4479A1" },
+  Git:              { icon: <SiGit />,              color: "#F05032" },
+  GitHub:           { icon: <SiGithub />,           color: "#181717" },
+  "VS Code":        { icon: <SiVscodium />,         color: "#007ACC" },
+  "Microsoft Office":{ icon: <SiOnlyoffice />,      color: "#D83B01" },
+  Figma:            { icon: <SiFigma />,            color: "#F24E1E" },
+  Postman:          { icon: <SiPostman />,          color: "#FF6C37" },
+  Firebase:         { icon: <SiFirebase />,         color: "#FFCA28" },
+  Vercel:           { icon: <SiVercel />,           color: "#000000" },
+};
+
+const categoryConfig = {
+  language:   { label: "Programming Languages", number: "01" },
+  technology: { label: "Technologies & Frameworks", number: "02" },
+  tool:       { label: "Tools & Software", number: "03" },
+};
+
+export default function Skills() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+
+  const grouped = {
+    language:   skills.filter((s) => s.category === "language"),
+    technology: skills.filter((s) => s.category === "technology"),
+    tool:       skills.filter((s) => s.category === "tool"),
+  };
+
+  return (
+    <section id="skills" className="py-32 px-6 bg-stone-50" ref={ref}>
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="mb-6"
+        >
+          <span className="text-xs tracking-[0.25em] uppercase text-stone-400">
+            02 / Skills
+          </span>
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" as const }}
+          className="font-serif text-4xl md:text-5xl font-normal text-stone-900 mb-16"
+        >
+          The tools of my trade.
+        </motion.h2>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {(Object.entries(grouped) as [keyof typeof grouped, typeof skills][]).map(
+            ([category, items], colIdx) => (
+              <motion.div
+                key={category}
+                initial={{ opacity: 0, y: 40 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.2 + colIdx * 0.12,
+                  ease: "easeOut" as const,
+                }}
+                className="bg-white rounded-2xl p-7 border border-stone-100 shadow-sm"
+              >
+                {/* Card header */}
+                <div className="flex items-center justify-between mb-7">
+                  <h3 className="font-serif text-base font-normal text-stone-800 tracking-wide">
+                    {categoryConfig[category].label}
+                  </h3>
+                  <span className="text-xs font-mono text-stone-300">
+                    {categoryConfig[category].number}
+                  </span>
+                </div>
+
+                {/* Skills grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  {items.map((skill, i) => {
+                    const meta = skillMeta[skill.name];
+                    return (
+                      <motion.div
+                        key={skill.name}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                        transition={{
+                          duration: 0.35,
+                          delay: 0.4 + colIdx * 0.1 + i * 0.04,
+                        }}
+                        className="group flex items-center gap-2.5 p-2.5 rounded-xl border border-stone-100 hover:border-stone-200 hover:shadow-sm transition-all duration-200 cursor-default"
+                      >
+                        {/* Icon */}
+                        <div
+                          className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 transition-all duration-200"
+                          style={{
+                            backgroundColor: "#f5f5f4",
+                            color: "#1c1917",
+                          }}
+                        >
+                          {meta?.icon}
+                        </div>
+                        {/* Name */}
+                        <span className="text-xs font-medium text-stone-600 group-hover:text-stone-900 transition-colors leading-tight">
+                          {skill.name}
+                        </span>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )
+          )}
+        </div>
+      </div>
+    </section>
+  );
+} 
