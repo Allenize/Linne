@@ -77,7 +77,8 @@
   --color-foreground: var(--foreground);
 }
 
-html { scroll-behavior: smooth; overflow-x: clip; overscroll-behavior-x: none; }
+html { scroll-behavior: smooth; overflow-x: clip; overscroll-behavior-x: none; scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar { display: none; }
 
 body {
   background: var(--background);

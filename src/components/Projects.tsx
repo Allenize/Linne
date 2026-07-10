@@ -189,14 +189,14 @@ function InfoPanel({
   onSelectSibling: (id: number) => void;
 }) {
   return (
-    <div className="flex flex-col h-full justify-between gap-6">
+    <div className="flex flex-col h-full justify-between gap-4 sm:gap-6">
       {/* Title, description, features */}
       <div>
-        <h3 className="font-serif text-3xl sm:text-4xl text-stone-900 mb-3 leading-snug">
+        <h3 className="font-serif text-2xl sm:text-4xl text-stone-900 mb-2 sm:mb-3 leading-snug">
           {project.title}
         </h3>
 
-        <p className={`text-sm text-stone-500 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}>
+        <p className={`text-xs sm:text-sm text-stone-500 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}>
           {project.description}
         </p>
         <button
@@ -207,9 +207,9 @@ function InfoPanel({
           {expanded ? "Show less" : "Read more"}
         </button>
 
-        <div className="mt-6">
-          <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-3">Key Features</p>
-          <ul className="grid grid-cols-1 gap-x-4 gap-y-2">
+        <div className="mt-4 sm:mt-6">
+          <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-2 sm:mb-3">Key Features</p>
+          <ul className="grid grid-cols-1 gap-x-4 gap-y-1.5 sm:gap-y-2">
             {project.features.slice(0, 6).map((f) => (
               <li key={f} className="flex items-center gap-2 text-xs text-stone-500">
                 <Check size={11} className="text-stone-300 flex-shrink-0" />
@@ -221,14 +221,14 @@ function InfoPanel({
       </div>
 
       {/* Tech stack + actions */}
-      <div className="flex flex-col justify-between gap-6">
+      <div className="flex flex-col justify-between gap-4 sm:gap-6">
         <div>
-          <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-3">Stack</p>
+          <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-2 sm:mb-3">Stack</p>
           <div className="flex flex-wrap gap-1.5">
             {project.technologies.map((tech) => (
               <span
                 key={tech}
-                className="px-2.5 py-1 text-[10px] font-medium text-stone-600 bg-white/60 backdrop-blur-sm border border-stone-200/70 rounded-full"
+                className="px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] font-medium text-stone-600 bg-white/60 backdrop-blur-sm border border-stone-200/70 rounded-full"
               >
                 {tech}
               </span>
@@ -236,21 +236,21 @@ function InfoPanel({
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-2.5 flex-wrap">
-          <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="flex items-center justify-between gap-2 sm:gap-2.5 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
             {project.githubUrl ? (
               <Magnetic strength={0.2}>
                 <a
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2.5 bg-stone-900 text-white rounded-full text-xs font-medium hover:bg-stone-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-stone-900 text-white rounded-full text-xs font-medium hover:bg-stone-700 transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   <GitHubIcon size={12} /> GitHub
                 </a>
               </Magnetic>
             ) : (
-              <span className="flex items-center gap-2 px-4 py-2.5 bg-stone-100 text-stone-400 rounded-full text-xs font-medium cursor-not-allowed select-none">
+              <span className="flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-stone-100 text-stone-400 rounded-full text-xs font-medium cursor-not-allowed select-none">
                 <GitHubIcon size={12} /> No Public Repo
               </span>
             )}
@@ -260,7 +260,7 @@ function InfoPanel({
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2.5 bg-white text-stone-700 rounded-full text-xs font-medium border border-stone-200 hover:border-stone-400 hover:text-stone-900 transition-all duration-200"
+                  className="flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-white text-stone-700 rounded-full text-xs font-medium border border-stone-200 hover:border-stone-400 hover:text-stone-900 transition-all duration-200"
                 >
                   <ExternalLink size={12} /> Live Demo
                 </a>
@@ -417,7 +417,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="py-24 md:py-32 px-4 sm:px-6" ref={ref}>
+    <section id="projects" className="py-16 md:py-32 px-4 sm:px-6" ref={ref}>
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
@@ -434,24 +434,21 @@ export default function Projects() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" as const }}
-          className="mb-10 md:mb-14"
+          className="mb-8 md:mb-14"
         >
-          <h2 className="font-serif text-4xl md:text-5xl font-normal text-stone-900 leading-tight">
+          <h2 className="font-serif text-3xl md:text-5xl font-normal text-stone-900 leading-tight">
             Selected work.
           </h2>
-          <p className="text-sm text-stone-400 mt-2 max-w-md">
-            A collection of platforms, apps, and tools I&apos;ve designed and built — spanning school, work, and personal projects.
-          </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-[220px_1fr] gap-6 lg:gap-10">
+        <div className="relative grid grid-cols-1 gap-0 lg:grid-cols-[220px_1fr] lg:gap-10">
 
-          {/* Index nav — desktop only, sticky project list */}
+          {/* Index nav — icon-only row overlapping the top of the card on mobile, full text list from lg up */}
           <motion.nav
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="hidden lg:flex flex-col gap-0.5 sticky top-28 self-start"
+            className="relative z-20 flex flex-row flex-wrap gap-1 mb-4 lg:mb-0 lg:static lg:z-auto lg:flex-col lg:left-auto lg:gap-0.5 lg:sticky lg:top-28 lg:self-start"
           >
             {projects
               .map((p, i) => ({ p, i }))
@@ -461,11 +458,15 @@ export default function Projects() {
                 suppressHydrationWarning
                 key={p.id}
                 onClick={() => goTo(i)}
-                className="group relative flex items-center gap-3 py-2.5 text-left"
+                aria-label={p.title}
+                title={p.title}
+                className="group relative flex items-center gap-3 px-0.5 py-0.5 lg:px-0 lg:py-2.5 text-left"
               >
                 <span
-                  className={`relative w-7 h-7 flex-shrink-0 flex items-center justify-center transition-all duration-300 ${
-                    i === current ? "scale-105" : ""
+                  className={`relative w-9 h-9 lg:w-7 lg:h-7 flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-300 ${
+                    i === current
+                      ? "scale-105 bg-white/40 backdrop-blur-md border border-white/50 shadow-md lg:bg-transparent lg:backdrop-blur-none lg:border-none lg:shadow-none"
+                      : ""
                   }`}
                 >
                   {p.navIcon && (
@@ -474,13 +475,13 @@ export default function Projects() {
                       src={p.navIcon}
                       alt=""
                       aria-hidden="true"
-                      className={`w-full h-full object-contain transition-all duration-300 ${
+                      className={`w-5 h-5 lg:w-full lg:h-full object-contain transition-all duration-300 ${
                         i === current ? "opacity-100 brightness-100" : "opacity-90 brightness-0 group-hover:opacity-100 group-hover:brightness-100"
                       }`}
                     />
                   )}
                 </span>
-                <span className="flex flex-col">
+                <span className="hidden lg:flex flex-col">
                   <span
                     className={`text-sm leading-tight transition-colors duration-300 ${
                       i === current ? "text-stone-900 font-medium" : "text-stone-400 group-hover:text-stone-700"
@@ -502,27 +503,6 @@ export default function Projects() {
             ))}
           </motion.nav>
 
-          {/* Mobile index — horizontal scroll chips */}
-          <div className="flex lg:hidden gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-1">
-            {projects
-              .map((p, i) => ({ p, i }))
-              .filter(({ p }) => !GROUPED_CHILD_IDS.has(p.id))
-              .map(({ p, i }) => (
-              <button
-                suppressHydrationWarning
-                key={p.id}
-                onClick={() => goTo(i)}
-                className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all duration-300 ${
-                  i === current
-                    ? "bg-stone-900 text-white border-stone-900"
-                    : "bg-white text-stone-500 border-stone-200 hover:border-stone-400"
-                }`}
-              >
-                {p.title}
-              </button>
-            ))}
-          </div>
-
           {/* Main stage */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -536,7 +516,7 @@ export default function Projects() {
             >
             <TiltCard max={2.5} className="block">
               <div
-                className="relative bg-white rounded-[2rem] border border-stone-100 overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-500"
+                className="relative bg-white rounded-2xl sm:rounded-[2rem] border border-stone-100 overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-500"
                 style={{
                   WebkitMaskImage: "-webkit-radial-gradient(white, black)",
                   maskImage: "radial-gradient(white, black)",
@@ -544,7 +524,7 @@ export default function Projects() {
               >
               {/* Split layout — image gallery left, info right, for every project */}
               <div className="grid md:grid-cols-2 md:h-[560px]">
-                <div className="relative h-[380px] sm:h-[460px] md:h-full">
+                <div className="relative h-[260px] sm:h-[460px] md:h-full">
                   <AnimatePresence mode="wait" custom={direction}>
                     <motion.div
                       key={current}
@@ -577,7 +557,7 @@ export default function Projects() {
                       animate="center"
                       exit="exit"
                       transition={{ duration: 0.35, ease: "easeOut" }}
-                      className="h-full p-6 sm:p-8 lg:p-10"
+                      className="h-full p-4 sm:p-8 lg:p-10"
                     >
                       <InfoPanel
                         project={project}
@@ -616,4 +596,4 @@ export default function Projects() {
       </AnimatePresence>
     </section>
   );
-} 
+}

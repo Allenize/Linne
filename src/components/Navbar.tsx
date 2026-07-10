@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { navItems } from "@/data";
 import Magnetic from "./Magnetic";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -16,11 +19,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollTo = (href: string) => {
-    setMobileOpen(false);
-    const el = document.querySelector(href);
-    el?.scrollIntoView({ behavior: "smooth" });
-  };
+  const isActive = (href: string) =>
+    href.startsWith("/#") ? false : pathname === href;
 
   return (
     <>
@@ -42,25 +42,28 @@ export default function Navbar() {
           }}
         >
           {/* Logo */}
-          <button
-            suppressHydrationWarning
-            onClick={() => scrollTo("#hero")}
+          <Link
+            href="/"
+            onClick={() => setMobileOpen(false)}
             className="font-serif text-2xl tracking-tight text-stone-900 hover:text-stone-600 transition-colors"
           >
             Linne
-          </button>
+          </Link>
 
           {/* Desktop nav — glass pill */}
           <nav className="hidden md:flex items-center gap-1 bg-white/40 backdrop-blur-md rounded-full p-1 border border-white/50">
             {navItems.map((item) => (
-              <button
-                suppressHydrationWarning
+              <Link
                 key={item.href}
-                onClick={() => scrollTo(item.href)}
-                className="relative px-4 py-1.5 text-sm text-stone-600 rounded-full transition-all duration-300 hover:text-stone-900 hover:bg-white/70 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_2px_8px_rgba(28,25,23,0.06)]"
+                href={item.href}
+                className={`relative px-4 py-1.5 text-sm rounded-full transition-all duration-300 hover:text-stone-900 hover:bg-white/70 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_2px_8px_rgba(28,25,23,0.06)] ${
+                  isActive(item.href)
+                    ? "text-stone-900 bg-white/70 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_2px_8px_rgba(28,25,23,0.06)]"
+                    : "text-stone-600"
+                }`}
               >
                 {item.label}
-              </button>
+              </Link>
             ))}
           </nav>
 
@@ -91,14 +94,16 @@ export default function Navbar() {
           >
             <nav className="flex flex-col p-2">
               {navItems.map((item) => (
-                <button
-                  suppressHydrationWarning
+                <Link
                   key={item.href}
-                  onClick={() => scrollTo(item.href)}
-                  className="px-6 py-3 text-left text-sm text-stone-700 rounded-2xl hover:bg-white/60 hover:text-stone-900 transition-colors"
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`px-6 py-3 text-left text-sm rounded-2xl hover:bg-white/60 hover:text-stone-900 transition-colors ${
+                    isActive(item.href) ? "text-stone-900 bg-white/60" : "text-stone-700"
+                  }`}
                 >
                   {item.label}
-                </button>
+                </Link>
               ))}
             </nav>
           </motion.div>

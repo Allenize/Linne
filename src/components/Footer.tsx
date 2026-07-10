@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, ArrowUp, Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 const GitHubIcon = ({ size = 14 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -22,10 +22,6 @@ const socialLinks = [
 ];
 
 export default function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <footer className="border-t border-stone-100 py-10 px-6 bg-white">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
@@ -50,17 +46,6 @@ export default function Footer() {
             </a>
           ))}
         </div>
-
-        <button
-          suppressHydrationWarning
-          onClick={scrollToTop}
-          className="flex items-center gap-2 text-xs text-stone-400 hover:text-stone-700 transition-colors group"
-        >
-          Back to top
-          <span className="w-7 h-7 rounded-full border border-stone-200 flex items-center justify-center group-hover:border-stone-400 transition-colors">
-            <ArrowUp size={12} />
-          </span>
-        </button>
       </div>
     </footer>
   );

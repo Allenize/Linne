@@ -227,7 +227,7 @@ export default function Contact() {
           className="mb-16"
         >
           <span className="text-xs tracking-[0.25em] uppercase text-stone-400">
-            06 / Contact
+            04 / Contact
           </span>
         </motion.div>
 

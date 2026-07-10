@@ -58,13 +58,13 @@ export default function Skills() {
   };
 
   return (
-    <section id="skills" className="py-32 px-6 bg-stone-50" ref={ref}>
+    <section id="skills" className="py-16 md:py-32 px-4 sm:px-6 bg-stone-50" ref={ref}>
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-6"
+          className="mb-4 md:mb-6"
         >
           <span className="text-xs tracking-[0.25em] uppercase text-stone-400">
             02 / Skills
@@ -75,12 +75,12 @@ export default function Skills() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" as const }}
-          className="font-serif text-4xl md:text-5xl font-normal text-stone-900 mb-16"
+          className="font-serif text-3xl md:text-5xl font-normal text-stone-900 mb-8 md:mb-16"
         >
           The tools of my trade.
         </motion.h2>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="flex flex-col gap-4 md:grid md:grid-cols-3 md:gap-8">
           {(Object.entries(grouped) as [keyof typeof grouped, typeof skills][]).map(
             ([category, items], colIdx) => (
               <TiltCard
@@ -93,11 +93,11 @@ export default function Skills() {
                   ease: "easeOut" as const,
                 }}
                 max={5}
-                className="bg-white/40 backdrop-blur-xl rounded-2xl p-7 border border-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_8px_24px_rgba(28,25,23,0.06)]"
+                className="w-full bg-white/40 backdrop-blur-xl rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-7 border border-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_8px_24px_rgba(28,25,23,0.06)]"
               >
                 {/* Card header */}
-                <div className="flex items-center justify-between mb-7">
-                  <h3 className="font-serif text-base font-normal text-stone-800 tracking-wide">
+                <div className="flex items-center justify-between mb-4 md:mb-7">
+                  <h3 className="font-serif text-sm md:text-base font-normal text-stone-800 tracking-wide">
                     {categoryConfig[category].label}
                   </h3>
                   <span className="text-xs font-mono text-stone-300">
@@ -106,7 +106,7 @@ export default function Skills() {
                 </div>
 
                 {/* Skills grid */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 md:grid-cols-2 gap-2 md:gap-3">
                   {items.map((skill, i) => {
                     const meta = skillMeta[skill.name];
                     return (
@@ -118,11 +118,11 @@ export default function Skills() {
                           duration: 0.35,
                           delay: 0.4 + colIdx * 0.1 + i * 0.04,
                         }}
-                        className="group flex items-center gap-2.5 p-2.5 rounded-xl border border-stone-100 hover:border-stone-200 hover:shadow-sm transition-all duration-200 cursor-default"
+                        className="group flex flex-row items-center gap-1.5 md:gap-2.5 p-1.5 md:p-2.5 rounded-lg md:rounded-xl border border-stone-100 hover:border-stone-200 hover:shadow-sm transition-all duration-200 cursor-default text-left"
                       >
                         {/* Icon */}
                         <div
-                          className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 transition-all duration-200"
+                          className="w-7 h-7 md:w-8 md:h-8 rounded-md md:rounded-lg flex items-center justify-center text-sm md:text-base flex-shrink-0 transition-all duration-200"
                           style={{
                             backgroundColor: "#f5f5f4",
                             color: "#1c1917",
@@ -131,7 +131,7 @@ export default function Skills() {
                           {meta?.icon}
                         </div>
                         {/* Name */}
-                        <span className="text-xs font-medium text-stone-600 group-hover:text-stone-900 transition-colors leading-tight">
+                        <span className="text-[10px] md:text-xs font-medium text-stone-600 group-hover:text-stone-900 transition-colors leading-tight">
                           {skill.name}
                         </span>
                       </motion.div>
@@ -145,4 +145,4 @@ export default function Skills() {
       </div>
     </section>
   );
-} 
+}

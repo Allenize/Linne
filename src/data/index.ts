@@ -1,12 +1,10 @@
 import { Project, Skill, Education, Certification, NavItem } from "@/types";
 
 export const navItems: NavItem[] = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
-  { label: "Education", href: "#education" },
-  { label: "Certifications", href: "#certifications" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "/about" },
+  { label: "Skills", href: "/skills" },
+  { label: "Projects", href: "/projects" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export const skills: Skill[] = [
@@ -338,4 +336,4 @@ export const certifications: Certification[] = [
     date: "2026",
     image: "/certifications/cert-internship.jpg",
   },
-];
+];  

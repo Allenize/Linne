@@ -1,12 +1,15 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useRef, useState } from "react";
 import TiltCard from "./TiltCard";
+import Education from "./Education";
+import Certifications from "./Certifications";
 
 export default function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [tab, setTab] = useState<"education" | "certifications">("education");
 
   const fadeUp = (delay = 0) => ({
     initial: { opacity: 0, y: 40 },
@@ -71,10 +74,12 @@ export default function About() {
                 Career Goals
               </h3>
               <p className="text-stone-700 leading-relaxed">
-                To grow as a web and game developer by taking on real
-                technical challenges, building applications along the way,
-                and delivering work that makes a measurable impact on the
-                team and product.
+                I&apos;m looking to start my career as a software or web
+                developer, ideally somewhere I can keep learning while
+                building things that are genuinely used, not just shipped.
+                Long-term, I want to grow into a full-stack or game
+                development role where I can take more ownership over how a
+                product is designed, not just how it&apos;s built.
               </p>
             </TiltCard>
 
@@ -96,7 +101,66 @@ export default function About() {
             </div>
           </div>
         </div>
+
+        {/* Education + Certifications — merged, switchable via tabs */}
+        <motion.div {...fadeUp(0.4)} className="mt-24 sm:mt-32">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10 sm:mb-14">
+            <h3 className="font-serif text-3xl md:text-4xl font-normal text-stone-900 leading-tight">
+              {tab === "education" ? "Academic background." : "Verified credentials."}
+            </h3>
+
+            {/* Tab switcher */}
+            <div className="inline-flex self-start sm:self-auto p-1 rounded-full bg-stone-100 border border-stone-200/70">
+              <button
+                suppressHydrationWarning
+                onClick={() => setTab("education")}
+                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
+                  tab === "education"
+                    ? "bg-stone-900 text-white shadow-sm"
+                    : "text-stone-500 hover:text-stone-800"
+                }`}
+              >
+                Education
+              </button>
+              <button
+                suppressHydrationWarning
+                onClick={() => setTab("certifications")}
+                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
+                  tab === "certifications"
+                    ? "bg-stone-900 text-white shadow-sm"
+                    : "text-stone-500 hover:text-stone-800"
+                }`}
+              >
+                Certifications
+              </button>
+            </div>
+          </div>
+
+          <AnimatePresence mode="wait">
+            {tab === "education" ? (
+              <motion.div
+                key="education"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.35, ease: "easeOut" as const }}
+              >
+                <Education />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="certifications"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.35, ease: "easeOut" as const }}
+              >
+                <Certifications />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </section>
   );
-}
+} 
