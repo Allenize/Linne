@@ -417,7 +417,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="py-16 md:py-32 px-4 sm:px-6" ref={ref}>
+    <section id="projects" className="pt-10 pb-16 md:py-32 px-4 sm:px-6" ref={ref}>
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
@@ -427,7 +427,7 @@ export default function Projects() {
           transition={{ duration: 0.6 }}
           className="mb-6"
         >
-          <span className="text-xs tracking-[0.25em] uppercase text-stone-400">03 / Projects</span>
+          <span className="text-xs tracking-[0.25em] uppercase text-stone-400">02 / Projects</span>
         </motion.div>
 
         <motion.div

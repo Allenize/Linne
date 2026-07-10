@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import TiltCard from "./TiltCard";
 import Education from "./Education";
 import Certifications from "./Certifications";
+import Skills from "./Skills";
 
 export default function About() {
   const ref = useRef(null);
@@ -25,9 +26,9 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="py-32 px-6" ref={ref}>
+    <section id="about" className="pt-10 pb-20 sm:py-32 px-6" ref={ref}>
       <div className="max-w-6xl mx-auto">
-        <motion.div {...fadeUp(0)} className="mb-16">
+        <motion.div {...fadeUp(0)} className="mb-8 sm:mb-16">
           <span className="text-xs tracking-[0.25em] uppercase text-stone-400">
             01 / About
           </span>
@@ -46,18 +47,28 @@ export default function About() {
 
             <motion.div {...fadeUp(0.2)} className="space-y-5 text-stone-600 leading-relaxed">
               <p>
-                I&apos;m John Allen A. Guerra, an Information Technology
-                graduate majoring in Web and Game Development.
+                My interest in tech didn&apos;t start with a five-year plan,
+                it started with games. Growing up, I was endlessly curious
+                about how the worlds I was playing in were actually built,
+                and that curiosity slowly spread to every app and website I
+                used, always wondering how it all worked underneath. That
+                question is really what led me to pursue Information
+                Technology.
               </p>
               <p>
-                I build web applications and interactive experiences, from
-                full-stack platforms to game prototypes, with a strong
-                foundation in modern web technologies, UI development, and
-                software design.
+                Outside of code, I&apos;ve always loved making things by
+                hand. I&apos;ve been drawing and joining creative art
+                contests since elementary school, and that same urge to
+                build something out of nothing carries straight into my
+                projects today. I also grew up playing online games and
+                still do, not just for fun but for the logic behind them,
+                the systems, the puzzles, the problem-solving that makes a
+                good game, or a good piece of software, click.
               </p>
               <p>
-                My work spans community platforms, management systems, mobile
-                apps, and games. I bring that range to every project I take on.
+                That mix of curiosity, a creative eye, and a love for
+                working through logic is really what shapes how I approach
+                web and game development today.
               </p>
             </motion.div>
           </div>
@@ -101,6 +112,14 @@ export default function About() {
             </div>
           </div>
         </div>
+
+        {/* Skills */}
+        <motion.div {...fadeUp(0.4)} className="mt-24 sm:mt-32">
+          <h3 className="font-serif text-3xl md:text-4xl font-normal text-stone-900 leading-tight mb-10 sm:mb-14">
+            The tools of my trade.
+          </h3>
+          <Skills />
+        </motion.div>
 
         {/* Education + Certifications — merged, switchable via tabs */}
         <motion.div {...fadeUp(0.4)} className="mt-24 sm:mt-32">

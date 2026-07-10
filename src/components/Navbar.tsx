@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navItems } from "@/data";
@@ -31,10 +30,10 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4"
       >
         <div
-          className={`w-full max-w-3xl flex items-center justify-between rounded-full pl-6 pr-2 py-2 transition-all duration-500 ${
+          className={`w-full max-w-3xl flex items-center justify-between rounded-full pl-6 pr-2 py-2 transition-all duration-500 backdrop-saturate-150 ${
             scrolled || mobileOpen
-              ? "bg-white/50 backdrop-blur-2xl shadow-[0_8px_32px_rgba(28,25,23,0.08)] border border-white/60"
-              : "bg-white/30 backdrop-blur-xl shadow-[0_4px_24px_rgba(28,25,23,0.05)] border border-white/40"
+              ? "bg-white/70 backdrop-blur-2xl shadow-[0_8px_32px_rgba(28,25,23,0.1)] border border-white/70"
+              : "bg-white/50 backdrop-blur-2xl shadow-[0_4px_24px_rgba(28,25,23,0.06)] border border-white/60"
           }`}
           style={{
             boxShadow:
@@ -51,7 +50,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav — glass pill */}
-          <nav className="hidden md:flex items-center gap-1 bg-white/40 backdrop-blur-md rounded-full p-1 border border-white/50">
+          <nav className="hidden md:flex items-center gap-1 bg-white/60 backdrop-blur-md backdrop-saturate-150 rounded-full p-1 border border-white/60">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -75,7 +74,23 @@ export default function Navbar() {
               onClick={() => setMobileOpen((v) => !v)}
               aria-label="Toggle menu"
             >
-              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+              <div className="relative w-4 h-4 flex items-center justify-center">
+                <motion.span
+                  className="absolute h-[1.5px] w-4 bg-current rounded-full"
+                  animate={{ rotate: mobileOpen ? 45 : 0, y: mobileOpen ? 0 : -4.5 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" as const }}
+                />
+                <motion.span
+                  className="absolute h-[1.5px] w-4 bg-current rounded-full"
+                  animate={{ opacity: mobileOpen ? 0 : 1, scale: mobileOpen ? 0.5 : 1 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" as const }}
+                />
+                <motion.span
+                  className="absolute h-[1.5px] w-4 bg-current rounded-full"
+                  animate={{ rotate: mobileOpen ? -45 : 0, y: mobileOpen ? 0 : 4.5 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" as const }}
+                />
+              </div>
             </button>
           </Magnetic>
         </div>
@@ -89,7 +104,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-20 left-4 right-4 z-40 md:hidden rounded-3xl bg-white/50 backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(28,25,23,0.1)] overflow-hidden"
+            className="fixed top-20 left-4 right-4 z-40 md:hidden rounded-3xl bg-white/75 backdrop-blur-2xl backdrop-saturate-150 border border-white/70 shadow-[0_8px_32px_rgba(28,25,23,0.12)] overflow-hidden"
             style={{ boxShadow: "inset 0 1px 1px rgba(255,255,255,0.6), 0 8px 32px rgba(28,25,23,0.1)" }}
           >
             <nav className="flex flex-col p-2">

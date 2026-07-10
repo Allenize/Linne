@@ -1,6 +1,8 @@
 "use client";
 
-import { Mail, Phone } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Mail, Phone, Code2, X, Layers, Palette, Sparkles, ShieldCheck, Image as ImageIcon, Rocket } from "lucide-react";
 
 const GitHubIcon = ({ size = 14 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -14,19 +16,175 @@ const LinkedInIcon = ({ size = 14 }: { size?: number }) => (
   </svg>
 );
 
+const FacebookIcon = ({ size = 14 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.891h-2.33v6.987C18.343 21.128 22 16.991 22 12z"/>
+  </svg>
+);
+
 const socialLinks = [
   { icon: <Mail size={14} />, href: "mailto:johnallenguerra@gmail.com", label: "Email" },
   { icon: <Phone size={14} />, href: "tel:+639677924819", label: "Phone" },
   { icon: <GitHubIcon size={14} />, href: "https://github.com/Allenize", label: "GitHub" },
   { icon: <LinkedInIcon size={14} />, href: "https://www.linkedin.com/in/guerra-john-allen-a-0765743ba/", label: "LinkedIn" },
+  { icon: <FacebookIcon size={14} />, href: "https://www.facebook.com/johnallen.guerra.20", label: "Facebook" },
 ];
 
+const buildDetails = [
+  {
+    icon: <Layers size={16} />,
+    heading: "Framework & Language",
+    items: [
+      "Next.js (App Router) for routing, layouts, and static/server rendering.",
+      "TypeScript throughout for type safety across components and data.",
+      "React function components with hooks (no class components).",
+    ],
+  },
+  {
+    icon: <Palette size={16} />,
+    heading: "Styling & Design",
+    items: [
+      "Tailwind CSS for utility-first styling and responsive breakpoints.",
+      "A soft, glassmorphism-inspired look: frosted white/translucent cards, backdrop blur, and subtle inset highlights.",
+      "A warm, neutral \"stone\" color palette paired with a serif display font for headings and a clean sans-serif for body text.",
+      "A recurring \"technical blueprint\" motif — corner tick marks on photos, faint grid backgrounds — to give the site a drafting-table feel.",
+    ],
+  },
+  {
+    icon: <Sparkles size={16} />,
+    heading: "Animation & Interaction",
+    items: [
+      "Framer Motion for scroll-triggered fade/slide-ins, page transitions, and the education/certification card flip states.",
+      "A custom magnetic-hover effect on buttons that gently pulls them toward the cursor.",
+      "A fixed-size role rotator under the name that slides vertically between titles without shifting any surrounding layout.",
+    ],
+  },
+  {
+    icon: <ShieldCheck size={16} />,
+    heading: "Contact Form & Spam Protection",
+    items: [
+      "EmailJS to send messages directly from the browser without a custom backend.",
+      "An invisible reCAPTCHA v2 challenge, a honeypot field, and a minimum fill-time check to filter out bots.",
+      "A client-side cooldown to prevent rapid repeat submissions from the same browser.",
+    ],
+  },
+  {
+    icon: <ImageIcon size={16} />,
+    heading: "Icons & Assets",
+    items: [
+      "lucide-react for most UI icons, with a few custom inline SVGs (GitHub, LinkedIn, Facebook) to match the brand marks exactly.",
+    ],
+  },
+  {
+    icon: <Rocket size={16} />,
+    heading: "Deployment",
+    items: [
+      "Hosted on Vercel, built directly from the Next.js project for automatic builds and previews.",
+    ],
+  },
+];
+
+function BuildModal({ onClose }: { onClose: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 z-[100] overflow-y-auto bg-stone-50/90 backdrop-blur-2xl backdrop-saturate-150"
+    >
+      {/* Decorative blurred color blobs for the glassy backdrop */}
+      <div className="pointer-events-none fixed -top-32 -left-32 w-[420px] h-[420px] rounded-full bg-amber-200/30 blur-3xl" />
+      <div className="pointer-events-none fixed top-1/3 -right-40 w-[480px] h-[480px] rounded-full bg-stone-300/30 blur-3xl" />
+      <div className="pointer-events-none fixed -bottom-40 left-1/4 w-[420px] h-[420px] rounded-full bg-orange-100/40 blur-3xl" />
+      {/* Faint technical grid, consistent with the rest of the site */}
+      <div
+        className="pointer-events-none fixed inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+        }}
+      />
+
+      <div className="relative min-h-screen px-5 sm:px-8 py-10 sm:py-16 max-w-4xl mx-auto">
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          className="fixed top-5 right-5 sm:top-8 sm:right-8 z-10 w-10 h-10 rounded-full flex items-center justify-center text-stone-500 bg-white/60 backdrop-blur-xl border border-white/70 hover:bg-white/90 hover:text-stone-900 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_4px_16px_rgba(28,25,23,0.08)] transition-all duration-200"
+        >
+          <X size={18} />
+        </button>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" as const }}
+        >
+          <span className="inline-flex items-center gap-1.5 text-xs tracking-[0.25em] uppercase text-stone-400 mb-4">
+            <Code2 size={13} /> Behind the site
+          </span>
+          <h2 className="font-serif text-4xl sm:text-5xl text-stone-900 leading-tight mb-3">
+            How I built this.
+          </h2>
+          <p className="text-stone-500 leading-relaxed max-w-lg mb-12">
+            A breakdown of the stack, design decisions, and small details
+            behind this portfolio — from the framework it runs on to the
+            way it keeps spam out of the contact form.
+          </p>
+        </motion.div>
+
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
+          {buildDetails.map((section, i) => (
+            <motion.div
+              key={section.heading}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 + i * 0.06, ease: "easeOut" as const }}
+              className="p-6 sm:p-7 rounded-2xl bg-white/50 backdrop-blur-xl border border-white/70 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_8px_24px_rgba(28,25,23,0.06)]"
+            >
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-8 h-8 rounded-lg bg-stone-900 text-white flex items-center justify-center flex-shrink-0">
+                  {section.icon}
+                </div>
+                <h3 className="text-xs tracking-[0.15em] uppercase text-stone-500">
+                  {section.heading}
+                </h3>
+              </div>
+              <ul className="space-y-2">
+                {section.items.map((item, j) => (
+                  <li key={j} className="text-sm text-stone-600 leading-relaxed flex gap-2">
+                    <span className="text-stone-300 mt-1">—</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Footer() {
+  const [showBuildModal, setShowBuildModal] = useState(false);
+
   return (
     <footer className="border-t border-stone-100 py-10 px-6 bg-white">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex flex-col items-center md:items-start gap-1">
-          <span className="font-serif text-lg text-stone-900">John Allen A. Guerra</span>
+          <div className="flex items-center gap-2">
+            <span className="font-serif text-lg text-stone-900">John Allen A. Guerra</span>
+            <button
+              onClick={() => setShowBuildModal(true)}
+              aria-label="How I built this"
+              title="How I built this"
+              className="w-6 h-6 rounded-full flex items-center justify-center text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-colors"
+            >
+              <Code2 size={13} />
+            </button>
+          </div>
           <span className="text-xs text-stone-400">
             © {new Date().getFullYear()} · San Pablo, Laguna · johnallenguerra@gmail.com
           </span>
@@ -47,6 +205,10 @@ export default function Footer() {
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {showBuildModal && <BuildModal onClose={() => setShowBuildModal(false)} />}
+      </AnimatePresence>
     </footer>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Mail } from "lucide-react";
 import { useState, useEffect } from "react";
 import Magnetic from "./Magnetic";
@@ -15,34 +15,34 @@ const fadeUp = (delay = 0) => ({
 const RESUME_VERSION = "3";
 
 const ROLES = [
-  "Web Developer", "Game Designer", "UI & UX Designer",
-  "Full Stack Dev", "Creative Technologist", "Software Engineer",
+  "Web Developer", "Game Designer", "UI & UX Design",
+  "Full Stack Dev", "Creative Tech", "Software Engineer",
 ];
 
 function DynamicRole() {
   const [index, setIndex] = useState(0);
-  const [displayed, setDisplayed] = useState("");
-  const [typing, setTyping] = useState(true);
 
   useEffect(() => {
-    const current = ROLES[index];
-    let t: ReturnType<typeof setTimeout>;
-    if (typing) {
-      if (displayed.length < current.length)
-        t = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 70);
-      else t = setTimeout(() => setTyping(false), 1800);
-    } else {
-      if (displayed.length > 0)
-        t = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 40);
-      else { setIndex((i) => (i + 1) % ROLES.length); setTyping(true); }
-    }
-    return () => clearTimeout(t);
-  }, [displayed, typing, index]);
+    const t = setInterval(() => setIndex((i) => (i + 1) % ROLES.length), 2200);
+    return () => clearInterval(t);
+  }, []);
 
   return (
-    <span className="inline-flex items-center gap-0.5">
-      <span>{displayed}</span>
-      <span className="inline-block w-0.5 h-4 bg-stone-400 animate-pulse ml-0.5" />
+    <span
+      className="relative inline-block align-middle overflow-hidden h-[1.15em] w-[10.5em] sm:w-[11.5em]"
+    >
+      <AnimatePresence mode="popLayout">
+        <motion.span
+          key={ROLES[index]}
+          initial={{ y: "-100%", opacity: 0 }}
+          animate={{ y: "0%", opacity: 1 }}
+          exit={{ y: "100%", opacity: 0 }}
+          transition={{ duration: 0.45, ease: "easeInOut" }}
+          className="absolute inset-0 whitespace-nowrap"
+        >
+          {ROLES[index]}
+        </motion.span>
+      </AnimatePresence>
     </span>
   );
 }
@@ -65,57 +65,16 @@ export default function Hero() {
       />
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-stone-100 blur-3xl opacity-60 pointer-events-none" />
 
-      {/* ── Two columns, always side-by-side: info left, image + CTAs right ── */}
-      <div className="relative z-10 max-w-5xl mx-auto w-full flex flex-row items-start sm:items-center gap-5 sm:gap-10 md:gap-14">
-        {/* ── LEFT: name, role, bio ── */}
-        <div className="flex-1 min-w-0 text-left">
-          <motion.h1
-            {...fadeUp(0.1)}
-            className="font-serif text-3xl sm:text-5xl md:text-6xl leading-[1.1] sm:leading-[1.05] text-stone-900 mb-2 sm:mb-3"
-          >
-            John Allen A. Guerra
-          </motion.h1>
-
-          <motion.p
-            {...fadeUp(0.2)}
-            className="text-sm sm:text-base md:text-lg text-stone-500 uppercase tracking-widest mb-3 sm:mb-6 font-light min-h-[1.25rem] sm:min-h-[1.5rem]"
-          >
-            <DynamicRole /> · IT Graduate
-          </motion.p>
-
-          <motion.div
-            {...fadeUp(0.5)}
-            className="space-y-3 sm:space-y-4 text-stone-600 leading-relaxed text-sm sm:text-base md:text-lg text-left"
-          >
-            <p>
-              I&apos;m an Information Technology graduate based in San Pablo,
-              Laguna, Philippines, specializing in Web and Game Development. I
-              care about clean architecture and thoughtful usability, and try
-              to treat every project, big or small, with the same level of
-              care.
-            </p>
-            <p>
-              Right now I&apos;m focused on sharpening my craft, building
-              full-stack projects and small games on my own time, and
-              exploring new tools and frameworks that push me to write
-              cleaner, more thoughtful code with every project I ship.
-            </p>
-            <p>
-              I&apos;m completing my BSIT degree in 2026 and currently open
-              to new opportunities where I can keep building software that
-              makes a measurable difference for the people who rely on it.
-            </p>
-          </motion.div>
-        </div>
-
-        {/* ── RIGHT: fixed-position portrait + CTAs, same on every device ── */}
-        <div className="flex flex-col items-center shrink-0 w-28 sm:w-44 md:w-56 lg:w-64 mt-10 sm:mt-0">
+      {/* ── Mobile: image floats right, text wraps around & fills below it. Desktop (sm+): fixed two-column layout ── */}
+      <div className="relative z-10 max-w-5xl mx-auto w-full sm:flex sm:flex-row sm:items-center sm:gap-10 md:gap-14">
+        {/* ── Portrait + CTAs: floated on mobile, right column on sm+ ── */}
+        <div className="float-right ml-4 mb-4 sm:float-none sm:ml-0 sm:mb-0 sm:order-2 flex flex-col items-center shrink-0 w-28 sm:w-44 md:w-56 lg:w-64">
           <motion.div {...fadeUp(0.3)} className="relative w-full aspect-[3/4] mb-3 sm:mb-6">
             <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden border border-stone-200 bg-stone-100 shadow-xl">
               <img
                 src="/profile.jpg"
                 alt="John Allen A. Guerra"
-                className="w-full h-full object-cover grayscale"
+                className="w-full h-full object-cover"
               />
               {/* Corner ticks, technical/blueprint accent */}
               <span className="absolute top-2 left-2 sm:top-3 sm:left-3 w-2.5 h-2.5 sm:w-4 sm:h-4 border-t-2 border-l-2 border-white/80" />
@@ -145,6 +104,47 @@ export default function Hero() {
                 <Mail size={12} className="sm:w-[14px] sm:h-[14px]" /> Contact
               </Link>
             </Magnetic>
+          </motion.div>
+        </div>
+
+        {/* ── Name, role, bio: wraps around the floated image on mobile; fixed column on sm+ ── */}
+        <div className="sm:flex-1 sm:min-w-0 sm:order-1 text-left">
+          <motion.h1
+            {...fadeUp(0.1)}
+            className="font-serif text-3xl sm:text-5xl md:text-6xl leading-[1.1] sm:leading-[1.05] text-stone-900 mb-2 sm:mb-3"
+          >
+            John Allen A. Guerra
+          </motion.h1>
+
+          <motion.p
+            {...fadeUp(0.2)}
+            className="flex items-center text-sm sm:text-base md:text-lg text-stone-500 uppercase tracking-widest mb-3 sm:mb-6 font-light h-[1.5rem] sm:h-[1.75rem]"
+          >
+            <DynamicRole />
+          </motion.p>
+
+          <motion.div
+            {...fadeUp(0.5)}
+            className="space-y-3 sm:space-y-4 text-stone-600 leading-relaxed text-sm sm:text-base md:text-lg text-left"
+          >
+            <p>
+              I&apos;m an Information Technology graduate based in San Pablo,
+              Laguna, Philippines, specializing in Web and Game Development. I
+              care about clean architecture and thoughtful usability, and try
+              to treat every project, big or small, with the same level of
+              care.
+            </p>
+            <p>
+              Right now I&apos;m focused on sharpening my craft, building
+              full-stack projects and small games on my own time, and
+              exploring new tools and frameworks that push me to write
+              cleaner, more thoughtful code with every project I ship.
+            </p>
+            <p>
+              I&apos;m completing my BSIT degree in 2026 and currently open
+              to new opportunities where I can keep building software that
+              makes a measurable difference for the people who rely on it.
+            </p>
           </motion.div>
         </div>
       </div>
