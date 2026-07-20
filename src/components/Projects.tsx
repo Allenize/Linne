@@ -2,7 +2,7 @@
 
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { ExternalLink, ChevronLeft, ChevronRight, Check, Expand, X, MoreHorizontal } from "lucide-react";
+import { ExternalLink, ChevronLeft, ChevronRight, Check, Expand, X, MoreHorizontal, Download } from "lucide-react";
 
 function GitHubIcon({ size = 12 }: { size?: number }) {
   return (
@@ -263,6 +263,19 @@ function InfoPanel({
                   className="flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-white text-stone-700 rounded-full text-xs font-medium border border-stone-200 hover:border-stone-400 hover:text-stone-900 transition-all duration-200"
                 >
                   <ExternalLink size={12} /> Live Demo
+                </a>
+              </Magnetic>
+            )}
+            {project.downloadUrl && (
+              <Magnetic strength={0.2}>
+                <a
+                  href={project.downloadUrl}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-white text-stone-700 rounded-full text-xs font-medium border border-stone-200 hover:border-stone-400 hover:text-stone-900 transition-all duration-200"
+                >
+                  <Download size={12} /> Download
                 </a>
               </Magnetic>
             )}

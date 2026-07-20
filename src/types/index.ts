@@ -11,6 +11,7 @@ export interface Project {
   technologies: string[];
   githubUrl: string;
   liveUrl: string;
+  downloadUrl?: string;
   type: string;
   features: string[];
 }

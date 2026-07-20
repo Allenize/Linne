@@ -60,7 +60,16 @@ const FacebookIcon = ({ size = 18 }: { size?: number }) => (
   </svg>
 );
 
-const contactLinks = [
+type ContactLink = {
+  icon: React.ReactElement;
+  label: string;
+  value: string;
+  href: string;
+  displayValue?: string;
+  isPhone?: boolean;
+};
+
+const contactLinks: ContactLink[] = [
   {
     icon: <GitHubIcon size={18} />,
     label: "GitHub",
