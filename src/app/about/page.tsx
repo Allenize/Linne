@@ -6,7 +6,7 @@ export default function AboutPage() {
   return (
     <main className="bg-white">
       <Navbar />
-      <div className="pt-10 sm:pt-16" />
+      <div className="pt-8 sm:pt-10" />
       <About />
       <Footer />
     </main>

@@ -29,7 +29,7 @@ function DynamicRole() {
 
   return (
     <span
-      className="relative inline-block align-middle overflow-hidden h-[1.15em] w-[10.5em] sm:w-[11.5em]"
+      className="relative inline-block align-middle overflow-hidden h-[1.15em] w-[13.5em] sm:w-[14.5em]"
     >
       <AnimatePresence mode="popLayout">
         <motion.span
@@ -52,7 +52,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center px-5 sm:px-6 pt-24 pb-16 sm:pt-32 md:pb-16 overflow-hidden"
+      className="relative flex items-center justify-center px-5 sm:px-6 pt-28 pb-16 sm:pt-36 sm:pb-16 overflow-hidden"
     >
       {/* Technical grid backdrop */}
       <div

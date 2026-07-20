@@ -5,14 +5,14 @@ import { useRef, useState } from "react";
 import { education } from "@/data";
 import type { Education as EducationEntry } from "@/types";
 
-type Phase = "front" | "info" | "image";
+type Phase = "front" | "info";
 
 function EduCard({ edu, index, isInView }: { edu: EducationEntry; index: number; isInView: boolean }) {
   const [phase, setPhase] = useState<Phase>("front");
   const backImage = edu.images[1] ?? edu.images[0];
 
-  const cyclePhase = () => {
-    setPhase((p) => (p === "front" ? "info" : p === "info" ? "image" : "front"));
+  const togglePhase = () => {
+    setPhase((p) => (p === "front" ? "info" : "front"));
   };
 
   return (
@@ -22,8 +22,8 @@ function EduCard({ edu, index, isInView }: { edu: EducationEntry; index: number;
       transition={{ duration: 0.7, delay: 0.1 + index * 0.1, ease: "easeOut" as const }}
       onMouseEnter={() => setPhase("info")}
       onMouseLeave={() => setPhase("front")}
-      onClick={cyclePhase}
-      className="relative w-64 h-64 flex-shrink-0 snap-start rounded-2xl border border-stone-100 overflow-hidden shadow-sm cursor-pointer select-none"
+      onClick={togglePhase}
+      className="relative w-64 h-64 flex-shrink-0 snap-start rounded-2xl sm:border sm:border-stone-100 overflow-hidden shadow-sm cursor-pointer select-none"
     >
       {/* Front face — period, degree, institution */}
       <div
@@ -62,11 +62,7 @@ function EduCard({ edu, index, isInView }: { edu: EducationEntry; index: number;
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Glassy/blurred overlay, only while showing info */}
-        <div
-          className={`absolute inset-0 backdrop-blur-md bg-stone-900/45 transition-opacity duration-300 ${
-            phase === "info" ? "opacity-100" : "opacity-0"
-          }`}
-        />
+        <div className="absolute inset-0 backdrop-blur-md bg-stone-900/45" />
         {/* Description text, only while showing info — tapping again clears it */}
         <div
           className={`absolute inset-0 flex flex-col justify-end p-5 transition-opacity duration-300 ${
@@ -93,7 +89,7 @@ export default function Education() {
   return (
     <div ref={ref} className="relative">
       {/* Fixed-size cards, wraps naturally — same footprint as Certifications on every device */}
-      <div className="flex overflow-x-auto sm:flex-wrap sm:overflow-visible snap-x snap-mandatory scrollbar-hide -mx-4 sm:mx-0 px-4 sm:px-0 pb-2 sm:pb-0 gap-5 justify-start">
+      <div className="flex overflow-x-auto sm:flex-wrap sm:overflow-visible snap-x snap-mandatory scrollbar-hide overscroll-x-contain -mx-4 sm:mx-0 px-4 sm:px-0 pb-2 sm:pb-0 gap-5 justify-start">
         {education.map((edu, i) => (
           <EduCard key={edu.id} edu={edu} index={i} isInView={isInView} />
         ))}

@@ -26,15 +26,15 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="pt-10 pb-20 sm:py-32 px-6" ref={ref}>
+    <section id="about" className="pt-10 pb-16 sm:py-20 px-6" ref={ref}>
       <div className="max-w-6xl mx-auto">
-        <motion.div {...fadeUp(0)} className="mb-8 sm:mb-16">
+        <motion.div {...fadeUp(0)} className="mb-6 sm:mb-10">
           <span className="text-xs tracking-[0.25em] uppercase text-stone-400">
             01 / About
           </span>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Left: Main text */}
           <div>
             <motion.h2
@@ -114,16 +114,16 @@ export default function About() {
         </div>
 
         {/* Skills */}
-        <motion.div {...fadeUp(0.4)} className="mt-24 sm:mt-32">
-          <h3 className="font-serif text-3xl md:text-4xl font-normal text-stone-900 leading-tight mb-10 sm:mb-14">
+        <motion.div {...fadeUp(0.4)} className="mt-16 sm:mt-20">
+          <h3 className="font-serif text-3xl md:text-4xl font-normal text-stone-900 leading-tight mb-8 sm:mb-10">
             The tools of my trade.
           </h3>
           <Skills />
         </motion.div>
 
         {/* Education + Certifications — merged, switchable via tabs */}
-        <motion.div {...fadeUp(0.4)} className="mt-24 sm:mt-32">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10 sm:mb-14">
+        <motion.div {...fadeUp(0.4)} className="mt-16 sm:mt-20">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-8 sm:mb-10">
             <h3 className="font-serif text-3xl md:text-4xl font-normal text-stone-900 leading-tight">
               {tab === "education" ? "Academic background." : "Verified credentials."}
             </h3>

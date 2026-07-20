@@ -2,7 +2,7 @@
 
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { ExternalLink, ChevronLeft, ChevronRight, Check, Expand, X } from "lucide-react";
+import { ExternalLink, ChevronLeft, ChevronRight, Check, Expand, X, MoreHorizontal } from "lucide-react";
 
 function GitHubIcon({ size = 12 }: { size?: number }) {
   return (
@@ -207,7 +207,7 @@ function InfoPanel({
           {expanded ? "Show less" : "Read more"}
         </button>
 
-        <div className="mt-4 sm:mt-6">
+        <div className={`mt-4 sm:mt-6 ${expanded ? "" : "hidden sm:block"}`}>
           <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-2 sm:mb-3">Key Features</p>
           <ul className="grid grid-cols-1 gap-x-4 gap-y-1.5 sm:gap-y-2">
             {project.features.slice(0, 6).map((f) => (
@@ -222,7 +222,7 @@ function InfoPanel({
 
       {/* Tech stack + actions */}
       <div className="flex flex-col justify-between gap-4 sm:gap-6">
-        <div>
+        <div className={expanded ? "" : "hidden sm:block"}>
           <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-2 sm:mb-3">Stack</p>
           <div className="flex flex-wrap gap-1.5">
             {project.technologies.map((tech) => (
@@ -316,7 +316,7 @@ function SiblingProjectDock({
   onSelect: (id: number) => void;
 }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1">
       {group.map((gid) => {
         const gp = projects.find((p) => p.id === gid);
         if (!gp) return null;
@@ -330,8 +330,10 @@ function SiblingProjectDock({
             aria-label={`View ${gp.title}`}
             aria-current={isActive}
             title={gp.title}
-            className={`w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm shadow-lg flex items-center justify-center p-1.5 ring-2 transition-all duration-300 ${
-              isActive ? "ring-stone-900 scale-105" : "ring-transparent hover:ring-stone-300 hover:scale-105"
+            className={`relative w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-full p-1.5 transition-all duration-300 ${
+              isActive
+                ? "scale-105 bg-white/40 backdrop-blur-md border border-white/50 shadow-md"
+                : ""
             }`}
           >
             {gp.navIcon && (
@@ -360,6 +362,7 @@ export default function Projects() {
   const [expanded, setExpanded] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [showAllInNav, setShowAllInNav] = useState(false);
 
   // Touch swipe state
   const touchStartX = useRef<number | null>(null);
@@ -417,7 +420,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="pt-10 pb-16 md:py-32 px-4 sm:px-6" ref={ref}>
+    <section id="projects" className="pt-10 pb-16 md:py-20 px-4 sm:px-6" ref={ref}>
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
@@ -434,7 +437,7 @@ export default function Projects() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" as const }}
-          className="mb-8 md:mb-14"
+          className="mb-6 md:mb-10"
         >
           <h2 className="font-serif text-3xl md:text-5xl font-normal text-stone-900 leading-tight">
             Selected work.
@@ -452,7 +455,7 @@ export default function Projects() {
           >
             {projects
               .map((p, i) => ({ p, i }))
-              .filter(({ p }) => !GROUPED_CHILD_IDS.has(p.id))
+              .filter(({ p }) => showAllInNav || !GROUPED_CHILD_IDS.has(p.id))
               .map(({ p, i }) => (
               <button
                 suppressHydrationWarning
@@ -501,6 +504,41 @@ export default function Projects() {
                 </span>
               </button>
             ))}
+
+            {GROUPED_CHILD_IDS.size > 0 && (
+              <button
+                suppressHydrationWarning
+                type="button"
+                onClick={() => setShowAllInNav((v) => !v)}
+                aria-label={showAllInNav ? "Show fewer projects" : "Show all projects"}
+                title={showAllInNav ? "Show fewer projects" : "Show all projects"}
+                className="group relative flex items-center gap-3 px-0.5 py-0.5 lg:px-0 lg:py-2.5 text-left"
+              >
+                <span
+                  className={`relative w-9 h-9 lg:w-7 lg:h-7 flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-300 ${
+                    showAllInNav
+                      ? "scale-105 bg-white/40 backdrop-blur-md border border-white/50 shadow-md lg:bg-transparent lg:backdrop-blur-none lg:border-none lg:shadow-none"
+                      : ""
+                  }`}
+                >
+                  <MoreHorizontal
+                    size={18}
+                    className={`lg:w-full lg:h-full transition-all duration-300 ${
+                      showAllInNav ? "text-stone-900" : "text-stone-400 group-hover:text-stone-700"
+                    }`}
+                  />
+                </span>
+                <span className="hidden lg:flex flex-col">
+                  <span
+                    className={`text-sm leading-tight transition-colors duration-300 ${
+                      showAllInNav ? "text-stone-900 font-medium" : "text-stone-400 group-hover:text-stone-700"
+                    }`}
+                  >
+                    {showAllInNav ? "Show less" : "More"}
+                  </span>
+                </span>
+              </button>
+            )}
           </motion.nav>
 
           {/* Main stage */}
@@ -547,7 +585,7 @@ export default function Projects() {
                   <StageBadges type={project.type} current={current + 1} total={projects.length} />
                 </div>
 
-                <div className="border-t md:border-t-0 md:border-l border-stone-100 md:h-full md:overflow-y-auto">
+                <div className="border-t md:border-t-0 md:border-l border-stone-100 md:h-full md:overflow-y-auto overscroll-contain">
                   <AnimatePresence mode="wait" custom={direction}>
                     <motion.div
                       key={current}

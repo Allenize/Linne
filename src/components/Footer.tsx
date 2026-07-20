@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Phone, Code2, X, Layers, Palette, Sparkles, ShieldCheck, Image as ImageIcon, Rocket } from "lucide-react";
+import { Code2, X, Layers, Palette, Sparkles, ShieldCheck, Image as ImageIcon, Rocket } from "lucide-react";
 
 const GitHubIcon = ({ size = 14 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -23,8 +23,6 @@ const FacebookIcon = ({ size = 14 }: { size?: number }) => (
 );
 
 const socialLinks = [
-  { icon: <Mail size={14} />, href: "mailto:johnallenguerra@gmail.com", label: "Email" },
-  { icon: <Phone size={14} />, href: "tel:+639677924819", label: "Phone" },
   { icon: <GitHubIcon size={14} />, href: "https://github.com/Allenize", label: "GitHub" },
   { icon: <LinkedInIcon size={14} />, href: "https://www.linkedin.com/in/guerra-john-allen-a-0765743ba/", label: "LinkedIn" },
   { icon: <FacebookIcon size={14} />, href: "https://www.facebook.com/johnallen.guerra.20", label: "Facebook" },
@@ -93,10 +91,11 @@ function BuildModal({ onClose }: { onClose: () => void }) {
       transition={{ duration: 0.3 }}
       className="fixed inset-0 z-[100] overflow-y-auto bg-stone-50/90 backdrop-blur-2xl backdrop-saturate-150"
     >
-      {/* Decorative blurred color blobs for the glassy backdrop */}
-      <div className="pointer-events-none fixed -top-32 -left-32 w-[420px] h-[420px] rounded-full bg-amber-200/30 blur-3xl" />
+      {/* Decorative blurred glow for the glassy backdrop — neutral stone
+          tones only, no warm amber/orange glow */}
+      <div className="pointer-events-none fixed -top-32 -left-32 w-[420px] h-[420px] rounded-full bg-stone-200/40 blur-3xl" />
       <div className="pointer-events-none fixed top-1/3 -right-40 w-[480px] h-[480px] rounded-full bg-stone-300/30 blur-3xl" />
-      <div className="pointer-events-none fixed -bottom-40 left-1/4 w-[420px] h-[420px] rounded-full bg-orange-100/40 blur-3xl" />
+      <div className="pointer-events-none fixed -bottom-40 left-1/4 w-[420px] h-[420px] rounded-full bg-stone-200/40 blur-3xl" />
       {/* Faint technical grid, consistent with the rest of the site */}
       <div
         className="pointer-events-none fixed inset-0 opacity-[0.03]"
@@ -177,6 +176,7 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <span className="font-serif text-lg text-stone-900">John Allen A. Guerra</span>
             <button
+              suppressHydrationWarning
               onClick={() => setShowBuildModal(true)}
               aria-label="How I built this"
               title="How I built this"

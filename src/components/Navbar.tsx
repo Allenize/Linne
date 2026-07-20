@@ -30,27 +30,36 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4"
       >
         <div
-          className={`w-full max-w-3xl flex items-center justify-between rounded-full pl-6 pr-2 py-2 transition-all duration-500 backdrop-saturate-150 ${
+          className={`relative overflow-hidden w-full max-w-3xl flex items-center justify-between rounded-full pl-6 pr-2 py-2 transition-all duration-500 backdrop-blur-3xl backdrop-saturate-200 ${
             scrolled || mobileOpen
-              ? "bg-white/70 backdrop-blur-2xl shadow-[0_8px_32px_rgba(28,25,23,0.1)] border border-white/70"
-              : "bg-white/50 backdrop-blur-2xl shadow-[0_4px_24px_rgba(28,25,23,0.06)] border border-white/60"
+              ? "bg-white/40 shadow-[0_8px_40px_rgba(28,25,23,0.14)] border border-white/60"
+              : "bg-white/25 shadow-[0_8px_32px_rgba(28,25,23,0.08)] border border-white/40"
           }`}
           style={{
             boxShadow:
-              "inset 0 1px 1px rgba(255,255,255,0.6), 0 8px 32px rgba(28,25,23,0.06)",
+              "inset 0 1px 1px rgba(255,255,255,0.8), inset 0 -1px 8px rgba(255,255,255,0.15), 0 8px 32px rgba(28,25,23,0.08)",
           }}
         >
+          {/* Glass sheen — a soft diagonal highlight sitting on top of the
+              blur, the way light catches the top edge of real frosted glass. */}
+          <div
+            className="pointer-events-none absolute inset-0 rounded-full"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 30%, rgba(255,255,255,0) 55%)",
+            }}
+          />
           {/* Logo */}
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
-            className="font-serif text-2xl tracking-tight text-stone-900 hover:text-stone-600 transition-colors"
+            className="relative z-10 font-serif text-2xl tracking-tight text-stone-900 hover:text-stone-600 transition-colors"
           >
             Linne
           </Link>
 
           {/* Desktop nav — glass pill */}
-          <nav className="hidden md:flex items-center gap-1 bg-white/60 backdrop-blur-md backdrop-saturate-150 rounded-full p-1 border border-white/60">
+          <nav className="relative z-10 hidden md:flex items-center gap-1 bg-white/30 backdrop-blur-xl backdrop-saturate-200 rounded-full p-1 border border-white/50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)]">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -67,10 +76,10 @@ export default function Navbar() {
           </nav>
 
           {/* Mobile toggle — glass button */}
-          <Magnetic strength={0.3}>
+          <Magnetic strength={0.3} className="relative z-10 md:hidden">
             <button
               suppressHydrationWarning
-              className="md:hidden flex items-center justify-center w-9 h-9 rounded-full bg-white/40 backdrop-blur-md border border-white/50 text-stone-700 hover:bg-white/70 hover:text-stone-900 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] transition-all duration-300"
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-white/30 backdrop-blur-xl backdrop-saturate-200 border border-white/50 text-stone-700 hover:bg-white/70 hover:text-stone-900 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] transition-all duration-300"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label="Toggle menu"
             >
@@ -104,8 +113,8 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-20 left-4 right-4 z-40 md:hidden rounded-3xl bg-white/75 backdrop-blur-2xl backdrop-saturate-150 border border-white/70 shadow-[0_8px_32px_rgba(28,25,23,0.12)] overflow-hidden"
-            style={{ boxShadow: "inset 0 1px 1px rgba(255,255,255,0.6), 0 8px 32px rgba(28,25,23,0.1)" }}
+            className="fixed top-20 left-4 right-4 z-40 md:hidden rounded-3xl bg-white/35 backdrop-blur-3xl backdrop-saturate-200 border border-white/50 shadow-[0_8px_40px_rgba(28,25,23,0.16)] overflow-hidden"
+            style={{ boxShadow: "inset 0 1px 1px rgba(255,255,255,0.75), inset 0 -1px 8px rgba(255,255,255,0.15), 0 8px 40px rgba(28,25,23,0.12)" }}
           >
             <nav className="flex flex-col p-2">
               {navItems.map((item) => (

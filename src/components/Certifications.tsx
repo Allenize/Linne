@@ -117,7 +117,7 @@ export default function Certifications() {
   return (
     <div ref={ref}>
       {/* Fixed-size cards, wraps naturally — same footprint on every device */}
-      <div className="flex overflow-x-auto sm:flex-wrap sm:overflow-visible snap-x snap-mandatory scrollbar-hide -mx-4 sm:mx-0 px-4 sm:px-0 pb-2 sm:pb-0 gap-5 justify-start">
+      <div className="flex overflow-x-auto sm:flex-wrap sm:overflow-visible snap-x snap-mandatory scrollbar-hide overscroll-x-contain -mx-4 sm:mx-0 px-4 sm:px-0 pb-2 sm:pb-0 gap-5 justify-start">
         {certifications.map((cert, i) => (
           <CertCard key={cert.id} cert={cert} index={i} isInView={isInView} />
         ))}

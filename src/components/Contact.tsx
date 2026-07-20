@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { Mail, ArrowUpRight, Send, CheckCircle, Phone, MapPin, AlertCircle } from "lucide-react";
+import { Mail, ArrowUpRight, Send, CheckCircle, MapPin, AlertCircle } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import Script from "next/script";
 
@@ -62,19 +62,6 @@ const FacebookIcon = ({ size = 18 }: { size?: number }) => (
 
 const contactLinks = [
   {
-    icon: <Mail size={18} />,
-    label: "Email",
-    value: "johnallenguerra@gmail.com",
-    href: "mailto:johnallenguerra@gmail.com",
-  },
-  {
-    icon: <Phone size={18} />,
-    label: "Phone",
-    value: "+63 967 792 4819",
-    href: "tel:+639677924819",
-    isPhone: true,
-  },
-  {
     icon: <GitHubIcon size={18} />,
     label: "GitHub",
     value: "github.com/Allenize",
@@ -109,6 +96,7 @@ export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [copiedLabel, setCopiedLabel] = useState<string | null>(null);
+  const [openLink, setOpenLink] = useState<string | null>(null);
   // The invisible reCAPTCHA callback is registered once when the widget
   // renders, so it would otherwise always see the form's initial empty
   // values. This ref always holds the latest values for it to read.
@@ -230,58 +218,63 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="pt-10 pb-20 sm:py-32 px-4 sm:px-6 bg-stone-50 overflow-x-hidden" ref={ref}>
+    <section id="contact" className="pt-10 pb-16 sm:py-20 px-4 sm:px-6 bg-stone-50 overflow-x-hidden" ref={ref}>
       <div className="max-w-6xl mx-auto min-w-0">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-8 sm:mb-16"
+          className="mb-6 sm:mb-10"
         >
           <span className="text-xs tracking-[0.25em] uppercase text-stone-400">
             03 / Contact
           </span>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+        <div className="mb-8 lg:mb-10 lg:max-w-2xl">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" as const }}
+            className="font-serif text-4xl md:text-5xl font-normal text-stone-900 leading-tight mb-6"
+          >
+            Let&apos;s build
+            <br />
+            <span className="italic text-stone-400">something great.</span>
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="text-stone-500 leading-relaxed max-w-md mb-2"
+          >
+            I&apos;m actively looking for full-time opportunities where I can
+            apply my IT skills and continue growing. Whether you have a role
+            in mind or just want to connect, feel free to reach out anytime.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.25 }}
+            className="text-stone-400 text-sm flex items-center gap-1.5"
+          >
+            <MapPin size={13} className="text-stone-400 shrink-0" />
+            San Pablo, Laguna, Philippines
+          </motion.p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           {/* Left: Say Hello form */}
           {/* min-w-0 stops this grid item from growing past its track based on
               content size, which is what was pushing the whole max-w-6xl
               container (and everything in it) wider than the viewport on mobile */}
           <div className="min-w-0">
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" as const }}
-              className="font-serif text-4xl md:text-5xl font-normal text-stone-900 leading-tight mb-6"
-            >
-              Let&apos;s build
-              <br />
-              <span className="italic text-stone-400">something great.</span>
-            </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-stone-500 leading-relaxed max-w-md mb-2"
-            >
-              I&apos;m actively looking for full-time opportunities where I can
-              apply my IT skills and continue growing. Whether you have a role
-              in mind or just want to connect, feel free to reach out anytime.
-            </motion.p>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.25 }}
-              className="text-stone-400 text-sm mb-8 flex items-center gap-1.5"
-            >
-              <MapPin size={13} className="text-stone-400 shrink-0" />
-              San Pablo, Laguna, Philippines
-            </motion.p>
-
-            {/* Say Hello Form */}
+            {/* Say Hello Form — wrapped in a relative container so the
+                mobile icon rail can overlay its right edge without ever
+                changing the card's own width. */}
+            <div className="relative">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -435,61 +428,156 @@ export default function Contact() {
                 </button>
               </div>
             </motion.div>
+
+            {/* Mobile / tablet: icon-only rail. Fixed to the viewport's
+                right edge (not glued to the card's coordinates), so it
+                stays put on screen instead of looking pinned to one spot
+                on the card. Only mounted while the Contact section is in
+                view. Tapping an icon slides a flyout out to its left with
+                the full link, one at a time. Hidden at lg+, where the full
+                list (right column) takes over. */}
+            <AnimatePresence>
+              {isInView && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.4, ease: "easeOut" as const }}
+                  className="flex lg:hidden flex-col items-end gap-2.5 fixed top-1/2 right-2 -translate-y-1/2 z-30"
+                >
+              {contactLinks.map((link, i) => {
+                const isOpen = openLink === link.label;
+                return (
+                  <motion.div
+                    key={link.label}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={isInView ? { opacity: 1 } : {}}
+                    transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: "easeOut" as const }}
+                  >
+                    {/* Closed: bare icon, no box. Open: icon + label share
+                        one continuous pill container. `layout` animates the
+                        container smoothly between the two states. */}
+                    <motion.div
+                      layout
+                      transition={{ type: "spring", stiffness: 340, damping: 32 }}
+                      className={`flex items-center overflow-hidden transition-colors duration-300 ${
+                        isOpen
+                          ? "rounded-2xl border border-white/70 bg-white/95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_4px_16px_rgba(28,25,23,0.08)]"
+                          : ""
+                      }`}
+                    >
+                      <button
+                        suppressHydrationWarning
+                        type="button"
+                        onClick={() => setOpenLink(isOpen ? null : link.label)}
+                        aria-expanded={isOpen}
+                        aria-label={link.label}
+                        title={link.label}
+                        className={`w-11 h-11 flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${
+                          isOpen
+                            ? "text-stone-900"
+                            : "text-stone-400 hover:text-stone-900"
+                        }`}
+                      >
+                        {link.icon}
+                      </button>
+
+                      <AnimatePresence initial={false}>
+                        {isOpen && (
+                          <motion.a
+                            href={link.href}
+                            target={link.href.startsWith("http") ? "_blank" : undefined}
+                            rel="noopener noreferrer"
+                            onClick={link.isPhone ? (e) => handlePhoneClick(e, link) : undefined}
+                            initial={{ width: 0, opacity: 0 }}
+                            animate={{ width: "auto", opacity: 1 }}
+                            exit={{ width: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeOut" as const }}
+                            className="group flex items-center gap-2 pl-1 pr-4 py-2.5 whitespace-nowrap overflow-hidden"
+                          >
+                            <div className="min-w-0">
+                              <div className="text-[10px] tracking-widest uppercase text-stone-400">
+                                {link.label}
+                              </div>
+                              <p className="text-sm font-medium text-stone-800 max-w-[55vw] truncate">
+                                {"displayValue" in link ? link.displayValue : link.value}
+                              </p>
+                              {link.isPhone && copiedLabel === link.label && (
+                                <p className="text-xs text-stone-400 mt-0.5">Copied to clipboard!</p>
+                              )}
+                            </div>
+                            <ArrowUpRight
+                              size={15}
+                              className="text-stone-300 group-hover:text-stone-700 transition-colors flex-shrink-0"
+                            />
+                          </motion.a>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+            </div>
           </div>
 
-          {/* Right: Contact links */}
-          <div className="min-w-0 space-y-4">
-            {contactLinks.map((link, i) => (
-              <motion.a
-                key={link.label}
-                href={link.href}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel="noopener noreferrer"
-                onClick={
-                  link.isPhone ? (e) => handlePhoneClick(e, link) : undefined
-                }
-                initial={{ opacity: 0, x: 30 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{
-                  duration: 0.7,
-                  delay: 0.3 + i * 0.1,
-                  ease: "easeOut" as const,
-                }}
-                className="flex items-center gap-4 p-4 sm:p-5 bg-white/40 backdrop-blur-xl rounded-2xl border border-white/60 hover:bg-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_4px_16px_rgba(28,25,23,0.05)] hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_8px_24px_rgba(28,25,23,0.08)] transition-all duration-300 group"
-              >
-                <div className="w-11 h-11 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-center text-stone-600 group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300 flex-shrink-0">
-                  {link.icon}
-                </div>
-                {/* FIX: min-w-0 + overflow-hidden ensures text truncation works correctly */}
-                <div className="flex-1 min-w-0 overflow-hidden">
-                  <div className="text-xs tracking-widest uppercase text-stone-400">
-                    {link.label}
+          {/* Right: on lg+ this is the grid's second column — the socials
+              shown in full, all at once, no click needed. */}
+          <div className="min-w-0">
+            <div className="hidden lg:flex flex-col gap-2.5">
+              {contactLinks.map((link, i) => (
+                <motion.a
+                  key={link.label}
+                  href={link.href}
+                  target={link.href.startsWith("http") ? "_blank" : undefined}
+                  rel="noopener noreferrer"
+                  onClick={link.isPhone ? (e) => handlePhoneClick(e, link) : undefined}
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.7, delay: 0.3 + i * 0.1, ease: "easeOut" as const }}
+                  className="group flex items-center gap-3 bg-white/40 backdrop-blur-xl rounded-2xl border border-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_4px_16px_rgba(28,25,23,0.05)] pl-3 pr-4 py-2.5 hover:bg-white/70 transition-all duration-300"
+                >
+                  <div className="w-11 h-11 flex items-center justify-center flex-shrink-0 rounded-2xl bg-stone-50 text-stone-600 transition-all duration-300 group-hover:bg-stone-900 group-hover:text-white">
+                    {link.icon}
                   </div>
-                  <p className="text-sm font-medium text-stone-800 truncate mt-0.5">
-                    {"displayValue" in link ? link.displayValue : link.value}
-                  </p>
-                  {link.isPhone && copiedLabel === link.label && (
-                    <p className="text-xs text-stone-400 mt-0.5">
-                      Copied to clipboard!
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs tracking-widest uppercase text-stone-400">
+                      {link.label}
+                    </div>
+                    <p className="text-sm font-medium text-stone-800 truncate">
+                      {"displayValue" in link ? link.displayValue : link.value}
                     </p>
-                  )}
-                </div>
-                <ArrowUpRight
-                  size={16}
-                  className="text-stone-300 group-hover:text-stone-700 transition-colors flex-shrink-0"
-                />
-              </motion.a>
-            ))}
+                    {link.isPhone && copiedLabel === link.label && (
+                      <p className="text-xs text-stone-400 mt-0.5">Copied to clipboard!</p>
+                    )}
+                  </div>
+                  <ArrowUpRight
+                    size={15}
+                    className="text-stone-300 group-hover:text-stone-700 transition-colors flex-shrink-0"
+                  />
+                </motion.a>
+              ))}
+            </div>
 
             {/* Availability badge */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.7, ease: "easeOut" as const }}
-              className="flex items-center justify-center gap-3 p-4 bg-stone-100 rounded-2xl border border-stone-200"
+              className="flex items-center justify-center gap-3 p-4 mt-4 lg:mt-2.5 bg-stone-100 rounded-2xl border border-stone-200"
             >
               <div className="min-w-0 text-center">
-                <p className="font-serif text-sm text-stone-600 tracking-wide">Currently open to full-time roles, freelance work, and creative collaborations</p>
+                <p className="font-serif italic text-sm text-stone-600 tracking-wide leading-relaxed">
+                  &ldquo;For I know the thoughts that I think toward you, saith the
+                  LORD, thoughts of peace, and not of evil, to give you an
+                  expected end.&rdquo;
+                </p>
+                <p className="text-xs text-stone-400 tracking-widest uppercase mt-2">
+                  Jeremiah 29:11
+                </p>
               </div>
             </motion.div>
           </div>

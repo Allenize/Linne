@@ -59,7 +59,7 @@ export default function Skills() {
 
   return (
     <div ref={ref}>
-      <div className="flex overflow-x-auto md:flex-wrap md:overflow-visible snap-x snap-mandatory scrollbar-hide -mx-4 md:mx-0 px-4 md:px-0 pb-2 md:pb-0 gap-4 md:grid md:grid-cols-3 md:gap-8">
+      <div className="flex overflow-x-auto md:flex-wrap md:overflow-visible snap-x snap-mandatory scrollbar-hide overscroll-x-contain -mx-4 md:mx-0 px-4 md:px-0 pb-2 md:pb-0 gap-4 md:grid md:grid-cols-3 md:gap-8">
         {(Object.entries(grouped) as [keyof typeof grouped, typeof skills][]).map(
           ([category, items], colIdx) => (
             <TiltCard
@@ -84,8 +84,11 @@ export default function Skills() {
                 </span>
               </div>
 
-              {/* Skills grid */}
-              <div className="grid grid-cols-3 md:grid-cols-2 gap-2 md:gap-3">
+              {/* Skills grid — same 2 columns on every screen size now,
+                  so mobile no longer squeezes 3 cramped columns (which was
+                  overflowing and made the borders/icons look denser and
+                  darker than on desktop). */}
+              <div className="grid grid-cols-2 gap-2 md:gap-3">
                 {items.map((skill, i) => {
                   const meta = skillMeta[skill.name];
                   return (
@@ -97,7 +100,7 @@ export default function Skills() {
                         duration: 0.35,
                         delay: 0.4 + colIdx * 0.1 + i * 0.04,
                       }}
-                      className="group flex flex-row items-center gap-1.5 md:gap-2.5 p-1.5 md:p-2.5 rounded-lg md:rounded-xl border border-stone-100 hover:border-stone-200 hover:shadow-sm transition-all duration-200 cursor-default text-left"
+                      className="group flex flex-row items-center gap-2 md:gap-2.5 p-2 md:p-2.5 rounded-lg md:rounded-xl md:border md:border-stone-100 md:hover:border-stone-200 hover:shadow-sm transition-all duration-200 cursor-default text-left"
                     >
                       {/* Icon */}
                       <div
