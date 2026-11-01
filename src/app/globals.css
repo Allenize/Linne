@@ -223,13 +223,13 @@ body::before {
 .overview-gallery { perspective: 1500px; }
 .overview-gallery-track { transform-style: preserve-3d; }
 .overview-screen {
-  width: clamp(7.25rem, 16vw, 13.5rem); height: clamp(19rem, 52vh, 31rem);
+  width: clamp(7.25rem, 16vw, 13.5rem); height: clamp(18rem, 39vh, 26rem);
   border: 1px solid rgba(255,255,255,.32); background: rgba(4,24,21,.72);
   box-shadow: inset 0 1px 1px rgba(255,255,255,.28), 0 26px 55px rgba(0,0,0,.42);
   transform-origin: bottom center; transition: filter .25s ease, box-shadow .25s ease;
 }
 .overview-screen:hover { filter: brightness(1.08); box-shadow: inset 0 1px 1px rgba(255,255,255,.38), 0 32px 70px rgba(0,0,0,.48); }
-.overview-screen-main { width: clamp(10rem, 19vw, 16.5rem); height: clamp(22rem, 61vh, 36rem); border-color: rgba(255,255,255,.5); }
+.overview-screen-main { width: clamp(10rem, 19vw, 16.5rem); height: clamp(21rem, 46vh, 30rem); border-color: rgba(255,255,255,.5); }
 .overview-screen img { background: rgba(238,240,236,.96); }
 .overview-expand { color: white; border: 1px solid rgba(255,255,255,.28); background: rgba(8,31,27,.5); backdrop-filter: blur(12px); }
 .overview-action { display: inline-flex; align-items: center; gap: .35rem; border-radius: 999px; padding: .55rem .75rem; font-size: .7rem; color: rgba(255,255,255,.82); border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.1); transition: background .2s ease, transform .2s ease; }

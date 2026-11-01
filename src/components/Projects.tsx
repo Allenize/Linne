@@ -46,7 +46,7 @@ export default function Projects() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="overview-gallery relative mt-4 flex min-h-[23rem] flex-1 items-center justify-center sm:mt-6 sm:min-h-[31rem]">
+        <div className="overview-gallery relative mt-4 flex min-h-[23rem] flex-1 items-center justify-center sm:mt-5 sm:min-h-[22rem]">
           <AnimatePresence mode="popLayout">
             <motion.div key={active.id} initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .96 }} transition={{ duration: .55, ease: [0.16, 1, 0.3, 1] }} className="overview-gallery-track absolute inset-0 flex items-center justify-center">
               {gallery.map((image, index) => {
