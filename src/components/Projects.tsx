@@ -31,8 +31,7 @@ function ProjectImage({ logo, alt, count, onOpen }: { logo: string; alt: string;
       suppressHydrationWarning
       onClick={onOpen}
       aria-label={`View all photos of ${alt}`}
-      className="group relative flex items-center justify-center w-full h-full overflow-hidden cursor-zoom-in"
-      style={{ background: "linear-gradient(145deg, #faf9f7, #efece6)" }}
+      className="group project-visual relative flex items-center justify-center w-full h-full overflow-hidden cursor-zoom-in"
     >
       <img
         src={logo}
@@ -41,7 +40,7 @@ function ProjectImage({ logo, alt, count, onOpen }: { logo: string; alt: string;
       />
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
       {count > 1 && (
-        <span className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 text-stone-800 text-[11px] font-medium opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 shadow-lg">
+        <span className="liquid-chip absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-stone-800 text-[11px] font-medium opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
           <Expand size={12} /> View all {count} photos
         </span>
       )}
@@ -192,7 +191,7 @@ function InfoPanel({
     <div className="flex flex-col h-full justify-between gap-4 sm:gap-6">
       {/* Title, description, features */}
       <div>
-        <h3 className="font-serif text-2xl sm:text-4xl text-stone-900 mb-2 sm:mb-3 leading-snug">
+        <h3 className="font-serif text-3xl sm:text-[2.75rem] text-stone-950 mb-2 sm:mb-3 leading-[0.98] tracking-[-0.02em]">
           {project.title}
         </h3>
 
@@ -228,7 +227,7 @@ function InfoPanel({
             {project.technologies.map((tech) => (
               <span
                 key={tech}
-                className="px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] font-medium text-stone-600 bg-white/60 backdrop-blur-sm border border-stone-200/70 rounded-full"
+                className="liquid-chip px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] font-medium text-stone-700 rounded-full"
               >
                 {tech}
               </span>
@@ -260,7 +259,7 @@ function InfoPanel({
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-white text-stone-700 rounded-full text-xs font-medium border border-stone-200 hover:border-stone-400 hover:text-stone-900 transition-all duration-200"
+                  className="liquid-button flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 text-stone-700 rounded-full text-xs font-medium hover:text-stone-950 transition-all duration-200"
                 >
                   <ExternalLink size={12} /> Live Demo
                 </a>
@@ -273,7 +272,7 @@ function InfoPanel({
                   download
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-white text-stone-700 rounded-full text-xs font-medium border border-stone-200 hover:border-stone-400 hover:text-stone-900 transition-all duration-200"
+                  className="liquid-button flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 text-stone-700 rounded-full text-xs font-medium hover:text-stone-950 transition-all duration-200"
                 >
                   <Download size={12} /> Download
                 </a>
@@ -404,7 +403,6 @@ export default function Projects() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInView, current, lightboxOpen, galleryImages.length]);
 
   // Touch handlers for swipe
@@ -433,7 +431,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="pt-10 pb-16 md:py-20 px-4 sm:px-6" ref={ref}>
+    <section id="projects" className="relative z-10 pt-14 pb-20 md:pt-24 md:pb-28 px-4 sm:px-6" ref={ref}>
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
@@ -441,20 +439,32 @@ export default function Projects() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-6"
+          className="mb-4 flex items-center gap-3"
         >
-          <span className="text-xs tracking-[0.25em] uppercase text-stone-400">02 / Projects</span>
+          <span className="liquid-kicker text-[11px] tracking-[0.25em] uppercase text-stone-600">02 / Projects</span>
+          <span className="h-px w-10 bg-stone-400/60" />
+          <span className="text-[10px] tracking-[0.18em] uppercase text-stone-400">Curated archive</span>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" as const }}
-          className="mb-6 md:mb-10"
+          className="mb-8 md:mb-12 flex items-end justify-between gap-5"
         >
-          <h2 className="font-serif text-3xl md:text-5xl font-normal text-stone-900 leading-tight">
-            Selected work.
-          </h2>
+          <div>
+            <h2 className="font-serif text-5xl sm:text-6xl md:text-7xl font-normal text-stone-950 leading-[0.9] tracking-[-0.035em]">
+              Selected work.
+            </h2>
+            <p className="mt-4 max-w-xl text-sm sm:text-base text-stone-500 leading-relaxed">
+              A tactile collection of digital products, systems, and experiments—designed to be useful and built to last.
+            </p>
+          </div>
+          <div className="hidden sm:flex items-center gap-2" aria-label="Project navigation">
+            <button onClick={prev} aria-label="Previous project" className="liquid-icon-button"><ChevronLeft size={17} /></button>
+            <span className="px-2 text-[11px] tabular-nums text-stone-500">{String(current + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
+            <button onClick={next} aria-label="Next project" className="liquid-icon-button"><ChevronRight size={17} /></button>
+          </div>
         </motion.div>
 
         <div className="relative grid grid-cols-1 gap-0 lg:grid-cols-[220px_1fr] lg:gap-10">
@@ -464,7 +474,7 @@ export default function Projects() {
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="relative z-20 flex flex-row flex-wrap gap-1 mb-4 lg:mb-0 lg:static lg:z-auto lg:flex-col lg:left-auto lg:gap-0.5 lg:sticky lg:top-28 lg:self-start"
+            className="liquid-project-nav relative z-20 flex flex-row flex-wrap gap-1.5 mb-4 p-2 lg:mb-0 lg:z-auto lg:flex-col lg:gap-1 lg:sticky lg:top-28 lg:self-start"
           >
             {projects
               .map((p, i) => ({ p, i }))
@@ -476,7 +486,7 @@ export default function Projects() {
                 onClick={() => goTo(i)}
                 aria-label={p.title}
                 title={p.title}
-                className="group relative flex items-center gap-3 px-0.5 py-0.5 lg:px-0 lg:py-2.5 text-left"
+                className={`group relative flex items-center gap-3 px-0.5 py-0.5 lg:px-2.5 lg:py-2.5 text-left rounded-2xl transition-colors duration-300 ${i === current ? "lg:bg-white/45" : "lg:hover:bg-white/25"}`}
               >
                 <span
                   className={`relative w-9 h-9 lg:w-7 lg:h-7 flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-300 ${
@@ -567,7 +577,7 @@ export default function Projects() {
             >
             <TiltCard max={2.5} className="block">
               <div
-                className="relative bg-white rounded-2xl sm:rounded-[2rem] border border-stone-100 overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-500"
+                className="liquid-project-card relative rounded-[1.75rem] sm:rounded-[2.5rem] overflow-hidden transition-shadow duration-500"
                 style={{
                   WebkitMaskImage: "-webkit-radial-gradient(white, black)",
                   maskImage: "radial-gradient(white, black)",
@@ -598,7 +608,7 @@ export default function Projects() {
                   <StageBadges type={project.type} current={current + 1} total={projects.length} />
                 </div>
 
-                <div className="border-t md:border-t-0 md:border-l border-stone-100 md:h-full md:overflow-y-auto overscroll-contain">
+                <div className="project-info-panel border-t md:border-t-0 md:border-l md:h-full md:overflow-y-auto overscroll-contain">
                   <AnimatePresence mode="wait" custom={direction}>
                     <motion.div
                       key={current}

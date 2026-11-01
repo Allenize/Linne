@@ -60,6 +60,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: process.cwd(),
+  },
   // Removes the "X-Powered-By: Next.js" header, which otherwise tells
   // anyone probing your site exactly what framework/version you're running.
   poweredByHeader: false,

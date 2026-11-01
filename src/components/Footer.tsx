@@ -170,7 +170,7 @@ export default function Footer() {
   const [showBuildModal, setShowBuildModal] = useState(false);
 
   return (
-    <footer className="border-t border-stone-100 py-10 px-6 bg-white">
+    <footer className="relative z-10 border-t border-white/55 py-10 px-6 bg-white/28 backdrop-blur-2xl">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex flex-col items-center md:items-start gap-1">
           <div className="flex items-center gap-2">
@@ -198,7 +198,7 @@ export default function Footer() {
               target={link.href.startsWith("http") ? "_blank" : undefined}
               rel="noopener noreferrer"
               aria-label={link.label}
-              className="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center text-stone-400 hover:text-stone-900 hover:border-stone-400 transition-all duration-200"
+              className="liquid-icon-button !w-9 !h-9 text-stone-500 hover:text-stone-950"
             >
               {link.icon}
             </a>

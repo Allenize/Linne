@@ -117,7 +117,10 @@ export default function Contact() {
   // auto-fill every input on the page will.
   const [honeypot, setHoneypot] = useState("");
   // Timestamp the form mounted, used to catch bots that submit instantly.
-  const mountedAtRef = useRef(Date.now());
+  const mountedAtRef = useRef(0);
+  useEffect(() => {
+    mountedAtRef.current = Date.now();
+  }, []);
   // Where the invisible reCAPTCHA badge gets rendered, and the id Google
   // assigns it so we can trigger/reset it.
   const recaptchaContainerRef = useRef<HTMLDivElement>(null);
