@@ -120,7 +120,7 @@ export const projects: Project[] = [
     title: "Reshelve",
     description:
       "A business management mobile application built with Flutter and Dart for my mom's small business. The app enables efficient inventory management, debt and payment tracking, and product organization, with all data stored securely on-device.",
-    image: "/projects/reshelve-1.jpg",
+    image: "/projects/reshelve-overview.png",
     logo: "/projects/logos/reshelve-logo.png",
     navIcon: "/projects/nav-icons/reshelve-icon.png",
     images: [
