@@ -1,659 +1,83 @@
 "use client";
 
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
-import { ExternalLink, ChevronLeft, ChevronRight, Check, Expand, X, MoreHorizontal, Download } from "lucide-react";
-
-function GitHubIcon({ size = 12 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z" />
-    </svg>
-  );
-}
-
+import { useCallback, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, ArrowRight, Download, Expand, ExternalLink, X } from "lucide-react";
 import { projects } from "@/data";
-import Magnetic from "./Magnetic";
-import TiltCard from "./TiltCard";
-import type { Project } from "@/types";
 
-/** Desktop screenshots only — mobile shots are intentionally excluded. */
-function getGalleryImages(p: Project): string[] {
-  return p.images && p.images.length > 0 ? p.images : [p.image];
-}
-
-/** Logo cover for a project. Instead of a cropped screenshot, this shows
- *  the app's actual logo mark centered on a soft neutral card — clicking
- *  it opens the full screenshot gallery. */
-function ProjectImage({ logo, alt, count, onOpen }: { logo: string; alt: string; count: number; onOpen: () => void }) {
-  return (
-    <button
-      suppressHydrationWarning
-      onClick={onOpen}
-      aria-label={`View all photos of ${alt}`}
-      className="group project-visual relative flex items-center justify-center w-full h-full overflow-hidden cursor-zoom-in"
-    >
-      <img
-        src={logo}
-        alt={`${alt} logo`}
-        className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
-      />
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-      {count > 1 && (
-        <span className="liquid-chip absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-stone-800 text-[11px] font-medium opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-          <Expand size={12} /> View all {count} photos
-        </span>
-      )}
-    </button>
-  );
-}
-
-/** Full-screen album lightbox — opened by clicking a project's image. */
-function Lightbox({
-  images,
-  index,
-  alt,
-  onClose,
-  onPrev,
-  onNext,
-  onSelect,
-}: {
-  images: string[];
-  index: number;
-  alt: string;
-  onClose: () => void;
-  onPrev: () => void;
-  onNext: () => void;
-  onSelect: (i: number) => void;
-}) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight") onNext();
-      if (e.key === "ArrowLeft") onPrev();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, onNext, onPrev]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.25 }}
-      className="fixed inset-0 z-[100] bg-stone-950/95 backdrop-blur-sm flex items-center justify-center p-4 sm:p-10"
-      onClick={onClose}
-    >
-      <button
-        suppressHydrationWarning
-        onClick={(e) => { e.stopPropagation(); onClose(); }}
-        aria-label="Close gallery"
-        className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
-      >
-        <X size={18} />
-      </button>
-
-      <span className="absolute top-6 left-6 text-white/70 text-xs font-mono tabular-nums z-10">
-        {alt} — {String(index + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
-      </span>
-
-      {images.length > 1 && (
-        <>
-          <button
-            suppressHydrationWarning
-            onClick={(e) => { e.stopPropagation(); onPrev(); }}
-            aria-label="Previous photo"
-            className="absolute left-3 sm:left-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <button
-            suppressHydrationWarning
-            onClick={(e) => { e.stopPropagation(); onNext(); }}
-            aria-label="Next photo"
-            className="absolute right-3 sm:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
-          >
-            <ChevronRight size={20} />
-          </button>
-        </>
-      )}
-
-      <AnimatePresence mode="wait">
-        <motion.img
-          key={index}
-          src={images[index]}
-          alt={alt}
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          onClick={(e) => e.stopPropagation()}
-          className="max-w-full max-h-[80vh] sm:max-h-[85vh] object-contain rounded-lg shadow-2xl"
-        />
-      </AnimatePresence>
-
-      {images.length > 1 && (
-        <div
-          className="absolute bottom-6 inset-x-0 flex items-center justify-center gap-1.5 z-10"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {images.map((_, i) => (
-            <button
-              suppressHydrationWarning
-              key={i}
-              onClick={() => onSelect(i)}
-              aria-label={`Go to photo ${i + 1}`}
-              className={`transition-all duration-300 rounded-full ${
-                i === index ? "w-5 h-1.5 bg-white" : "w-1.5 h-1.5 bg-white/40 hover:bg-white/70"
-              }`}
-            />
-          ))}
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
-/** Type + counter badges floating over the image, with a scrim so they
- *  stay legible over any screenshot. */
-function StageBadges({ type }: { type: string; current: number; total: number }) {
-  return (
-    <>
-      <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/35 to-transparent pointer-events-none z-20" />
-      <div className="absolute inset-x-0 top-0 z-30 flex items-start justify-between p-4 sm:p-5">
-        <span className="text-[10px] font-medium px-2.5 py-1 rounded-full border border-white/20 bg-black/30 backdrop-blur-sm text-white">
-          {type}
-        </span>
-      </div>
-    </>
-  );
-}
-
-/** Description, features, stack and action buttons for the current
- *  project. `stacked` renders everything in a single column (used for
- *  the narrower portrait split-card); otherwise it's a two-column
- *  case-study layout. */
-function InfoPanel({
-  project,
-  expanded,
-  setExpanded,
-  siblingGroup,
-  onSelectSibling,
-}: {
-  project: Project;
-  expanded: boolean;
-  setExpanded: (fn: (v: boolean) => boolean) => void;
-  siblingGroup: number[] | null;
-  onSelectSibling: (id: number) => void;
-}) {
-  return (
-    <div className="flex flex-col h-full justify-between gap-4 sm:gap-6">
-      {/* Title, description, features */}
-      <div>
-        <h3 className="font-serif text-3xl sm:text-[2.75rem] text-stone-950 mb-2 sm:mb-3 leading-[0.98] tracking-[-0.02em]">
-          {project.title}
-        </h3>
-
-        <p className={`text-xs sm:text-sm text-stone-500 leading-relaxed ${expanded ? "" : "line-clamp-3"}`}>
-          {project.description}
-        </p>
-        <button
-          suppressHydrationWarning
-          onClick={() => setExpanded((v) => !v)}
-          className="mt-2 text-[11px] font-medium text-stone-400 hover:text-stone-700 transition-colors underline underline-offset-2"
-        >
-          {expanded ? "Show less" : "Read more"}
-        </button>
-
-        <div className={`mt-4 sm:mt-6 ${expanded ? "" : "hidden sm:block"}`}>
-          <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-2 sm:mb-3">Key Features</p>
-          <ul className="grid grid-cols-1 gap-x-4 gap-y-1.5 sm:gap-y-2">
-            {project.features.slice(0, 6).map((f) => (
-              <li key={f} className="flex items-center gap-2 text-xs text-stone-500">
-                <Check size={11} className="text-stone-300 flex-shrink-0" />
-                {f}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* Tech stack + actions */}
-      <div className="flex flex-col justify-between gap-4 sm:gap-6">
-        <div className={expanded ? "" : "hidden sm:block"}>
-          <p className="text-[10px] tracking-widest uppercase text-stone-300 mb-2 sm:mb-3">Stack</p>
-          <div className="flex flex-wrap gap-1.5">
-            {project.technologies.map((tech) => (
-              <span
-                key={tech}
-                className="liquid-chip px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] font-medium text-stone-700 rounded-full"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between gap-2 sm:gap-2.5 flex-wrap">
-          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
-            {project.githubUrl ? (
-              <Magnetic strength={0.2}>
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-stone-900 text-white rounded-full text-xs font-medium hover:bg-stone-700 transition-all duration-200 shadow-sm hover:shadow-md"
-                >
-                  <GitHubIcon size={12} /> GitHub
-                </a>
-              </Magnetic>
-            ) : (
-              <span className="flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-stone-100 text-stone-400 rounded-full text-xs font-medium cursor-not-allowed select-none">
-                <GitHubIcon size={12} /> No Public Repo
-              </span>
-            )}
-            {project.liveUrl && (
-              <Magnetic strength={0.2}>
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="liquid-button flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 text-stone-700 rounded-full text-xs font-medium hover:text-stone-950 transition-all duration-200"
-                >
-                  <ExternalLink size={12} /> Live Demo
-                </a>
-              </Magnetic>
-            )}
-            {project.downloadUrl && (
-              <Magnetic strength={0.2}>
-                <a
-                  href={project.downloadUrl}
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="liquid-button flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 text-stone-700 rounded-full text-xs font-medium hover:text-stone-950 transition-all duration-200"
-                >
-                  <Download size={12} /> Download
-                </a>
-              </Magnetic>
-            )}
-          </div>
-
-          {siblingGroup && (
-            <SiblingProjectDock group={siblingGroup} activeId={project.id} onSelect={onSelectSibling} />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Swipe threshold in pixels
-const SWIPE_THRESHOLD = 50;
-
-/** Groups related mini-projects under a primary project. The primary
- *  keeps its full slot in the sidebar/mobile nav; the children are
- *  hidden from that nav and instead surface as small icon buttons in
- *  the bottom-right corner of the image, on the primary card and on
- *  each other's cards, so you can hop between the family of apps. */
-const PROJECT_GROUPS: Record<number, number[]> = {
-  4: [5, 9, 7], // Reshelve -> Sunflower, Plate, Barly
-  1: [6],       // Artistic Vision -> Sejour
-  3: [8],       // PLSP DMS -> OrgHub
-};
-
-const GROUPED_CHILD_IDS = new Set(Object.values(PROJECT_GROUPS).flat());
-
-/** Returns the full sibling group (primary id first, then children) for
- *  a given project id, or null if that project isn't part of a group. */
-function getProjectGroup(id: number): number[] | null {
-  if (PROJECT_GROUPS[id]) return [id, ...PROJECT_GROUPS[id]];
-  for (const [primary, kids] of Object.entries(PROJECT_GROUPS)) {
-    if (kids.includes(id)) return [Number(primary), ...kids];
-  }
-  return null;
-}
-
-/** Small cluster of sibling-project icon buttons anchored to a corner
- *  of the image, letting you switch between a primary project and its
- *  related mini-apps without them cluttering the main nav. */
-function SiblingProjectDock({
-  group,
-  activeId,
-  onSelect,
-}: {
-  group: number[];
-  activeId: number;
-  onSelect: (id: number) => void;
-}) {
-  return (
-    <div className="flex items-center gap-1">
-      {group.map((gid) => {
-        const gp = projects.find((p) => p.id === gid);
-        if (!gp) return null;
-        const isActive = gid === activeId;
-        return (
-          <button
-            suppressHydrationWarning
-            key={gid}
-            type="button"
-            onClick={(e) => { e.stopPropagation(); onSelect(gid); }}
-            aria-label={`View ${gp.title}`}
-            aria-current={isActive}
-            title={gp.title}
-            className={`relative w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-full p-1.5 transition-all duration-300 ${
-              isActive
-                ? "scale-105 bg-white/40 backdrop-blur-md border border-white/50 shadow-md"
-                : ""
-            }`}
-          >
-            {gp.navIcon && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={gp.navIcon}
-                alt=""
-                aria-hidden="true"
-                className={`w-full h-full object-contain transition-all duration-300 ${
-                  isActive ? "opacity-100 brightness-100" : "opacity-90 brightness-0 hover:opacity-100 hover:brightness-100"
-                }`}
-              />
-            )}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
+const wrapIndex = (index: number) => (index + projects.length) % projects.length;
+const GitHubMark = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.87c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.82a9.6 9.6 0 0 1 2.5.34c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.77c0 .26.18.58.69.48A10 10 0 0 0 12 2Z" /></svg>;
 
 export default function Projects() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
   const [current, setCurrent] = useState(0);
-  const [direction, setDirection] = useState(0);
-  const [expanded, setExpanded] = useState(false);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState(0);
-  const [showAllInNav, setShowAllInNav] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const active = projects[current];
+  const previous = useCallback(() => { setDetailsOpen(false); setCurrent((index) => wrapIndex(index - 1)); }, []);
+  const next = useCallback(() => { setDetailsOpen(false); setCurrent((index) => wrapIndex(index + 1)); }, []);
 
-  // Touch swipe state
-  const touchStartX = useRef<number | null>(null);
-  const touchStartY = useRef<number | null>(null);
-
-  const prev = () => { setDirection(-1); setExpanded(false); setLightboxOpen(false); setCurrent((c) => (c - 1 + projects.length) % projects.length); };
-  const next = () => { setDirection(1);  setExpanded(false); setLightboxOpen(false); setCurrent((c) => (c + 1) % projects.length); };
-  const goTo = (i: number) => { setDirection(i > current ? 1 : -1); setExpanded(false); setLightboxOpen(false); setCurrent(i); };
-
-  const project = projects[current];
-  const galleryImages = getGalleryImages(project);
-
-  // Keyboard navigation: arrow keys browse the lightbox album when it's
-  // open, otherwise they switch between projects.
   useEffect(() => {
-    if (!isInView) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (lightboxOpen) {
-        if (e.key === "Escape") setLightboxOpen(false);
-        if (e.key === "ArrowRight") setLightboxIndex((i) => (i + 1) % galleryImages.length);
-        if (e.key === "ArrowLeft") setLightboxIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length);
-        return;
-      }
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") previous();
+      if (event.key === "ArrowRight") next();
+      if (event.key === "Escape") setDetailsOpen(false);
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [isInView, current, lightboxOpen, galleryImages.length]);
-
-  // Touch handlers for swipe
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null || touchStartY.current === null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX.current;
-    const dy = e.changedTouches[0].clientY - touchStartY.current;
-    // Only trigger if horizontal swipe is dominant
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD) {
-      if (dx < 0) next();
-      else prev();
-    }
-    touchStartX.current = null;
-    touchStartY.current = null;
-  };
-
-  const slideVariants = {
-    enter:  { opacity: 0 },
-    center: { opacity: 1 },
-    exit:   { opacity: 0 },
-  };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [next, previous]);
 
   return (
-    <section id="projects" className="relative z-10 pt-14 pb-20 md:pt-24 md:pb-28 px-4 sm:px-6" ref={ref}>
-      <div className="max-w-6xl mx-auto">
+    <section className="cinematic-projects relative flex min-h-[100svh] items-center overflow-hidden px-4 pb-10 pt-28 sm:pt-32">
+      <AnimatePresence mode="popLayout">
+        <motion.div key={active.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.65 }} className="project-backdrop absolute inset-0" style={{ backgroundImage: `url(${active.image})` }} aria-hidden="true" />
+      </AnimatePresence>
+      <div className="project-backdrop-shade absolute inset-0" aria-hidden="true" />
 
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-4 flex items-center gap-3"
-        >
-          <span className="liquid-kicker text-[11px] tracking-[0.25em] uppercase text-stone-600">02 / Projects</span>
-          <span className="h-px w-10 bg-stone-400/60" />
-          <span className="text-[10px] tracking-[0.18em] uppercase text-stone-400">Curated archive</span>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" as const }}
-          className="mb-8 md:mb-12 flex items-end justify-between gap-5"
-        >
-          <div>
-            <h2 className="font-serif text-5xl sm:text-6xl md:text-7xl font-normal text-stone-950 leading-[0.9] tracking-[-0.035em]">
-              Selected work.
-            </h2>
-            <p className="mt-4 max-w-xl text-sm sm:text-base text-stone-500 leading-relaxed">
-              A tactile collection of digital products, systems, and experiments—designed to be useful and built to last.
-            </p>
-          </div>
-          <div className="hidden sm:flex items-center gap-2" aria-label="Project navigation">
-            <button onClick={prev} aria-label="Previous project" className="liquid-icon-button"><ChevronLeft size={17} /></button>
-            <span className="px-2 text-[11px] tabular-nums text-stone-500">{String(current + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
-            <button onClick={next} aria-label="Next project" className="liquid-icon-button"><ChevronRight size={17} /></button>
-          </div>
-        </motion.div>
-
-        <div className="relative grid grid-cols-1 gap-0 lg:grid-cols-[220px_1fr] lg:gap-10">
-
-          {/* Index nav — icon-only row overlapping the top of the card on mobile, full text list from lg up */}
-          <motion.nav
-            initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="liquid-project-nav relative z-20 flex flex-row flex-wrap gap-1.5 mb-4 p-2 lg:mb-0 lg:z-auto lg:flex-col lg:gap-1 lg:sticky lg:top-28 lg:self-start"
-          >
-            {projects
-              .map((p, i) => ({ p, i }))
-              .filter(({ p }) => showAllInNav || !GROUPED_CHILD_IDS.has(p.id))
-              .map(({ p, i }) => (
-              <button
-                suppressHydrationWarning
-                key={p.id}
-                onClick={() => goTo(i)}
-                aria-label={p.title}
-                title={p.title}
-                className={`group relative flex items-center gap-3 px-0.5 py-0.5 lg:px-2.5 lg:py-2.5 text-left rounded-2xl transition-colors duration-300 ${i === current ? "lg:bg-white/45" : "lg:hover:bg-white/25"}`}
-              >
-                <span
-                  className={`relative w-9 h-9 lg:w-7 lg:h-7 flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-300 ${
-                    i === current
-                      ? "scale-105 bg-white/40 backdrop-blur-md border border-white/50 shadow-md lg:bg-transparent lg:backdrop-blur-none lg:border-none lg:shadow-none"
-                      : ""
-                  }`}
-                >
-                  {p.navIcon && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={p.navIcon}
-                      alt=""
-                      aria-hidden="true"
-                      className={`w-5 h-5 lg:w-full lg:h-full object-contain transition-all duration-300 ${
-                        i === current ? "opacity-100 brightness-100" : "opacity-90 brightness-0 group-hover:opacity-100 group-hover:brightness-100"
-                      }`}
-                    />
-                  )}
-                </span>
-                <span className="hidden lg:flex flex-col">
-                  <span
-                    className={`text-sm leading-tight transition-colors duration-300 ${
-                      i === current ? "text-stone-900 font-medium" : "text-stone-400 group-hover:text-stone-700"
-                    }`}
-                  >
-                    {p.title}
-                  </span>
-                  <span
-                    className={`text-[10px] font-medium transition-all duration-300 overflow-hidden ${
-                      i === current
-                        ? "max-h-6 mt-1 px-2 py-0.5 rounded-full border border-stone-200/70 bg-white/60 backdrop-blur-sm text-stone-500 inline-block w-fit"
-                        : "max-h-0 text-stone-300"
-                    }`}
-                  >
-                    {p.type}
-                  </span>
-                </span>
-              </button>
-            ))}
-
-            {GROUPED_CHILD_IDS.size > 0 && (
-              <button
-                suppressHydrationWarning
-                type="button"
-                onClick={() => setShowAllInNav((v) => !v)}
-                aria-label={showAllInNav ? "Show fewer projects" : "Show all projects"}
-                title={showAllInNav ? "Show fewer projects" : "Show all projects"}
-                className="group relative flex items-center gap-3 px-0.5 py-0.5 lg:px-0 lg:py-2.5 text-left"
-              >
-                <span
-                  className={`relative w-9 h-9 lg:w-7 lg:h-7 flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-300 ${
-                    showAllInNav
-                      ? "scale-105 bg-white/40 backdrop-blur-md border border-white/50 shadow-md lg:bg-transparent lg:backdrop-blur-none lg:border-none lg:shadow-none"
-                      : ""
-                  }`}
-                >
-                  <MoreHorizontal
-                    size={18}
-                    className={`lg:w-full lg:h-full transition-all duration-300 ${
-                      showAllInNav ? "text-stone-900" : "text-stone-400 group-hover:text-stone-700"
-                    }`}
-                  />
-                </span>
-                <span className="hidden lg:flex flex-col">
-                  <span
-                    className={`text-sm leading-tight transition-colors duration-300 ${
-                      showAllInNav ? "text-stone-900 font-medium" : "text-stone-400 group-hover:text-stone-700"
-                    }`}
-                  >
-                    {showAllInNav ? "Show less" : "More"}
-                  </span>
-                </span>
-              </button>
-            )}
-          </motion.nav>
-
-          {/* Main stage */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" as const }}
-          >
-            <div
-              className="touch-pan-y"
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-            >
-            <TiltCard max={2.5} className="block">
-              <div
-                className="liquid-project-card relative rounded-[1.75rem] sm:rounded-[2.5rem] overflow-hidden transition-shadow duration-500"
-                style={{
-                  WebkitMaskImage: "-webkit-radial-gradient(white, black)",
-                  maskImage: "radial-gradient(white, black)",
-                }}
-              >
-              {/* Split layout — image gallery left, info right, for every project */}
-              <div className="grid md:grid-cols-2 md:h-[560px]">
-                <div className="relative h-[260px] sm:h-[460px] md:h-full">
-                  <AnimatePresence mode="wait" custom={direction}>
-                    <motion.div
-                      key={current}
-                      custom={direction}
-                      variants={slideVariants}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{ duration: 0.35, ease: "easeOut" }}
-                      className="absolute inset-0 z-10"
-                    >
-                      <ProjectImage
-                        logo={galleryImages[0]}
-                        alt={project.title}
-                        count={galleryImages.length}
-                        onOpen={() => { setLightboxIndex(0); setLightboxOpen(true); }}
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                  <StageBadges type={project.type} current={current + 1} total={projects.length} />
-                </div>
-
-                <div className="project-info-panel border-t md:border-t-0 md:border-l md:h-full md:overflow-y-auto overscroll-contain">
-                  <AnimatePresence mode="wait" custom={direction}>
-                    <motion.div
-                      key={current}
-                      custom={direction}
-                      variants={slideVariants}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{ duration: 0.35, ease: "easeOut" }}
-                      className="h-full p-4 sm:p-8 lg:p-10"
-                    >
-                      <InfoPanel
-                        project={project}
-                        expanded={expanded}
-                        setExpanded={setExpanded}
-                        siblingGroup={getProjectGroup(project.id)}
-                        onSelectSibling={(id) => {
-                          const idx = projects.findIndex((p) => p.id === id);
-                          if (idx !== -1) goTo(idx);
-                        }}
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </div>
-              </div>
-            </TiltCard>
-            </div>
-          </motion.div>
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center">
+        <div className="mb-4 flex items-center gap-3 text-white/75 sm:mb-6"><span className="h-px w-8 bg-white/40" /><span className="text-[10px] font-medium tracking-[0.28em] uppercase">Selected projects</span><span className="h-px w-8 bg-white/40" /></div>
+        <div className="project-coverflow relative h-[29rem] w-full sm:h-[34rem] lg:h-[37rem]">
+          {[-2, -1, 0, 1, 2].map((offset) => {
+            const index = wrapIndex(current + offset);
+            const project = projects[index];
+            const isActive = offset === 0;
+            return (
+              <motion.button type="button" key={`${project.id}-${offset}`} onClick={() => isActive ? setDetailsOpen(true) : setCurrent(index)} aria-label={isActive ? `Open details for ${project.title}` : `Select ${project.title}`}
+                animate={{ x: `${offset * 58}%`, scale: isActive ? 1 : 0.86 - Math.abs(offset) * 0.04, opacity: Math.abs(offset) === 2 ? 0.58 : isActive ? 1 : 0.82, rotateY: offset * -8, zIndex: 10 - Math.abs(offset) }} transition={{ type: "spring", stiffness: 150, damping: 22 }}
+                className={`project-cover-card absolute left-1/2 top-1/2 h-[25rem] w-[min(78vw,25rem)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[2rem] text-left sm:h-[30rem] sm:w-[min(56vw,29rem)] sm:rounded-[2.5rem] lg:h-[33rem] ${isActive ? "cursor-zoom-in" : "cursor-pointer"}`}>
+                <img src={project.image} alt="" aria-hidden="true" className="h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/5 to-black/20" />
+                {isActive ? <><span className="project-expand-pill absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-2 rounded-full px-3.5 py-2 text-[11px] text-white/90"><Expand size={13} /> Explore</span><div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8"><p className="mb-2 text-[10px] tracking-[0.2em] text-white/55 uppercase">{active.type}</p><h1 className="font-serif text-4xl leading-none sm:text-5xl">{active.title}</h1><p className="mt-3 line-clamp-2 text-xs leading-relaxed text-white/72 sm:text-sm">{active.description}</p></div></> : null}
+              </motion.button>
+            );
+          })}
         </div>
 
+        <div className="project-dock mt-3 flex items-center gap-3 rounded-[1.6rem] px-3 py-2.5 text-white sm:mt-5 sm:gap-5 sm:px-4 sm:py-3">
+          <button type="button" onClick={previous} className="project-round-control" aria-label="Previous project"><ArrowLeft size={17} /></button>
+          <div className="flex min-w-0 items-center gap-3 sm:min-w-[16rem]">
+            {active.navIcon ? <img src={active.navIcon} alt="" className="h-10 w-10 rounded-full bg-white/75 object-contain p-2 sm:h-12 sm:w-12" /> : null}
+            <div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{active.title}</p><p className="truncate text-[10px] text-white/55">{active.technologies.join(" · ")}</p></div>
+          </div>
+          <span className="text-[10px] tabular-nums text-white/55">{String(current + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
+          <button type="button" onClick={next} className="project-round-control" aria-label="Next project"><ArrowRight size={17} /></button>
+        </div>
+        <div className="mt-4 flex items-center gap-1.5" aria-label="Choose project">
+          {projects.map((project, index) => <button type="button" key={project.id} onClick={() => setCurrent(index)} aria-label={`View ${project.title}`} className={`h-1.5 rounded-full transition-all ${index === current ? "w-9 bg-white/80" : "w-1.5 bg-white/35 hover:bg-white/60"}`} />)}
+        </div>
       </div>
 
       <AnimatePresence>
-        {lightboxOpen && (
-          <Lightbox
-            images={galleryImages}
-            index={lightboxIndex}
-            alt={project.title}
-            onClose={() => setLightboxOpen(false)}
-            onPrev={() => setLightboxIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length)}
-            onNext={() => setLightboxIndex((i) => (i + 1) % galleryImages.length)}
-            onSelect={setLightboxIndex}
-          />
-        )}
+        {detailsOpen ? (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[70] grid place-items-center bg-black/55 p-4 backdrop-blur-xl" onClick={() => setDetailsOpen(false)}>
+            <motion.article initial={{ y: 28, opacity: 0, scale: 0.96 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 20, opacity: 0, scale: 0.97 }} transition={{ type: "spring", stiffness: 220, damping: 24 }} onClick={(event) => event.stopPropagation()} className="project-detail-modal relative grid max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-[2rem] md:grid-cols-[1.05fr_.95fr]">
+              <button type="button" onClick={() => setDetailsOpen(false)} aria-label="Close details" className="project-round-control absolute right-4 top-4 z-10"><X size={17} /></button>
+              <img src={active.image} alt={active.title} className="h-64 w-full object-cover md:h-full md:min-h-[34rem]" />
+              <div className="flex flex-col justify-between bg-stone-100/90 p-7 text-stone-900 backdrop-blur-3xl sm:p-9">
+                <div><p className="text-[10px] tracking-[0.2em] text-stone-500 uppercase">{active.type}</p><h2 className="mt-3 font-serif text-4xl leading-none sm:text-5xl">{active.title}</h2><p className="mt-5 text-sm leading-relaxed text-stone-600">{active.description}</p><div className="mt-7 flex flex-wrap gap-2">{active.technologies.map((technology) => <span key={technology} className="rounded-full border border-white/70 bg-white/50 px-3 py-1.5 text-[10px]">{technology}</span>)}</div></div>
+                <div className="mt-8 flex flex-wrap gap-2">{active.githubUrl ? <a href={active.githubUrl} target="_blank" rel="noreferrer" className="project-action"><GitHubMark /> GitHub</a> : null}{active.liveUrl ? <a href={active.liveUrl} target="_blank" rel="noreferrer" className="project-action"><ExternalLink size={14} /> Live demo</a> : null}{active.downloadUrl ? <a href={active.downloadUrl} target="_blank" rel="noreferrer" className="project-action"><Download size={14} /> Download</a> : null}</div>
+              </div>
+            </motion.article>
+          </motion.div>
+        ) : null}
       </AnimatePresence>
     </section>
   );
