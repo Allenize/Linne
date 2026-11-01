@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Download, Expand, ExternalLink, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Download, ExternalLink, Maximize2, X } from "lucide-react";
 import { projects } from "@/data";
 
 const wrapIndex = (index: number) => (index + projects.length) % projects.length;
@@ -10,72 +10,85 @@ const GitHubMark = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="c
 
 export default function Projects() {
   const [current, setCurrent] = useState(0);
-  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const active = projects[current];
-  const previous = useCallback(() => { setDetailsOpen(false); setCurrent((index) => wrapIndex(index - 1)); }, []);
-  const next = useCallback(() => { setDetailsOpen(false); setCurrent((index) => wrapIndex(index + 1)); }, []);
+  const gallery = (active.images?.length ? active.images : [active.image]).slice(0, 7);
+  const previous = useCallback(() => { setSelectedImage(null); setCurrent((index) => wrapIndex(index - 1)); }, []);
+  const next = useCallback(() => { setSelectedImage(null); setCurrent((index) => wrapIndex(index + 1)); }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
+      if (selectedImage && event.key === "Escape") return setSelectedImage(null);
       if (event.key === "ArrowLeft") previous();
       if (event.key === "ArrowRight") next();
-      if (event.key === "Escape") setDetailsOpen(false);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [next, previous]);
+  }, [next, previous, selectedImage]);
 
   return (
-    <section className="cinematic-projects relative flex min-h-[100svh] items-center overflow-hidden px-4 pb-10 pt-28 sm:pt-32">
+    <section className="overview-projects relative min-h-[100svh] overflow-hidden px-3 pb-10 pt-24 sm:px-5 sm:pt-28">
       <AnimatePresence mode="popLayout">
-        <motion.div key={active.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.65 }} className="project-backdrop absolute inset-0" style={{ backgroundImage: `url(${active.image})` }} aria-hidden="true" />
+        <motion.div key={active.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }} className="project-backdrop absolute inset-0" style={{ backgroundImage: `url(${active.image})` }} aria-hidden="true" />
       </AnimatePresence>
-      <div className="project-backdrop-shade absolute inset-0" aria-hidden="true" />
+      <div className="overview-backdrop-shade absolute inset-0" aria-hidden="true" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center">
-        <div className="mb-4 flex items-center gap-3 text-white/75 sm:mb-6"><span className="h-px w-8 bg-white/40" /><span className="text-[10px] font-medium tracking-[0.28em] uppercase">Selected projects</span><span className="h-px w-8 bg-white/40" /></div>
-        <div className="project-coverflow relative h-[29rem] w-full sm:h-[34rem] lg:h-[37rem]">
-          {[-2, -1, 0, 1, 2].map((offset) => {
-            const index = wrapIndex(current + offset);
-            const project = projects[index];
-            const isActive = offset === 0;
-            return (
-              <motion.button type="button" key={`${project.id}-${offset}`} onClick={() => isActive ? setDetailsOpen(true) : setCurrent(index)} aria-label={isActive ? `Open details for ${project.title}` : `Select ${project.title}`}
-                animate={{ x: `${offset * 58}%`, scale: isActive ? 1 : 0.86 - Math.abs(offset) * 0.04, opacity: Math.abs(offset) === 2 ? 0.58 : isActive ? 1 : 0.82, rotateY: offset * -8, zIndex: 10 - Math.abs(offset) }} transition={{ type: "spring", stiffness: 150, damping: 22 }}
-                className={`project-cover-card absolute left-1/2 top-1/2 h-[25rem] w-[min(78vw,25rem)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[2rem] text-left sm:h-[30rem] sm:w-[min(56vw,29rem)] sm:rounded-[2.5rem] lg:h-[33rem] ${isActive ? "cursor-zoom-in" : "cursor-pointer"}`}>
-                <img src={project.image} alt="" aria-hidden="true" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/5 to-black/20" />
-                {isActive ? <><span className="project-expand-pill absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-2 rounded-full px-3.5 py-2 text-[11px] text-white/90"><Expand size={13} /> Explore</span><div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8"><p className="mb-2 text-[10px] tracking-[0.2em] text-white/55 uppercase">{active.type}</p><h1 className="font-serif text-4xl leading-none sm:text-5xl">{active.title}</h1><p className="mt-3 line-clamp-2 text-xs leading-relaxed text-white/72 sm:text-sm">{active.description}</p></div></> : null}
-              </motion.button>
-            );
-          })}
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-7rem)] w-full max-w-[92rem] flex-col">
+        <div className="overview-identity mb-2 flex items-center justify-between rounded-full px-4 py-2 text-[10px] tracking-[0.12em] text-white/70 sm:px-5 sm:text-xs">
+          <span>John Allen Guerra</span><span>{String(current + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
         </div>
 
-        <div className="project-dock mt-3 flex items-center gap-3 rounded-[1.6rem] px-3 py-2.5 text-white sm:mt-5 sm:gap-5 sm:px-4 sm:py-3">
+        <AnimatePresence mode="wait">
+          <motion.div key={active.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.38 }} className="text-center text-white">
+            <p className="mt-3 text-[10px] font-medium tracking-[0.28em] text-white/55 uppercase sm:text-xs">{active.type}</p>
+            <h1 className="overview-title mt-1 font-serif text-[clamp(3rem,8vw,7.5rem)] font-bold leading-[.82] tracking-[-.045em] uppercase">{active.title}</h1>
+            <p className="mt-2 text-sm text-white/72 sm:text-xl">{active.technologies.join(" · ")}</p>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="overview-gallery relative mt-4 flex min-h-[23rem] flex-1 items-center justify-center sm:mt-6 sm:min-h-[31rem]">
+          <AnimatePresence mode="popLayout">
+            <motion.div key={active.id} initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .96 }} transition={{ duration: .55, ease: [0.16, 1, 0.3, 1] }} className="overview-gallery-track absolute inset-0 flex items-center justify-center">
+              {gallery.map((image, index) => {
+                const center = (gallery.length - 1) / 2;
+                const offset = index - center;
+                const distance = Math.abs(offset);
+                return (
+                  <motion.button
+                    type="button" key={image} onClick={() => setSelectedImage(image)} aria-label={`Expand ${active.title} screen ${index + 1}`}
+                    initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, x: `${offset * 62}%`, y: distance * 12, scale: 1 - distance * .055, rotateZ: offset * 1.6, zIndex: 20 - Math.round(distance) }}
+                    transition={{ delay: index * .045, type: "spring", stiffness: 145, damping: 23 }}
+                    className={`overview-screen group absolute overflow-hidden rounded-[1.2rem] ${distance < .6 ? "overview-screen-main" : ""}`}
+                  >
+                    <img src={image} alt={`${active.title} interface ${index + 1}`} className="h-full w-full object-contain" />
+                    <span className="overview-expand absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full opacity-0 transition-opacity group-hover:opacity-100"><Maximize2 size={13} /></span>
+                  </motion.button>
+                );
+              })}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <div className="overview-controls mx-auto mt-1 flex w-full max-w-3xl items-center justify-between gap-2 rounded-[1.6rem] px-3 py-2.5 text-white sm:mt-3 sm:px-4 sm:py-3">
           <button type="button" onClick={previous} className="project-round-control" aria-label="Previous project"><ArrowLeft size={17} /></button>
-          <div className="flex min-w-0 items-center gap-3 sm:min-w-[16rem]">
-            {active.navIcon ? <img src={active.navIcon} alt="" className="h-10 w-10 rounded-full bg-white/75 object-contain p-2 sm:h-12 sm:w-12" /> : null}
-            <div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{active.title}</p><p className="truncate text-[10px] text-white/55">{active.technologies.join(" · ")}</p></div>
+          <div className="min-w-0 flex-1 text-center"><p className="truncate text-xs text-white/55 sm:text-sm">{active.description}</p></div>
+          <div className="hidden items-center gap-2 sm:flex">
+            {active.githubUrl ? <a href={active.githubUrl} target="_blank" rel="noreferrer" className="overview-action"><GitHubMark /> GitHub</a> : null}
+            {active.liveUrl ? <a href={active.liveUrl} target="_blank" rel="noreferrer" className="overview-action"><ExternalLink size={13} /> Live</a> : null}
+            {active.downloadUrl ? <a href={active.downloadUrl} target="_blank" rel="noreferrer" className="overview-action"><Download size={13} /> Download</a> : null}
           </div>
-          <span className="text-[10px] tabular-nums text-white/55">{String(current + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
           <button type="button" onClick={next} className="project-round-control" aria-label="Next project"><ArrowRight size={17} /></button>
         </div>
-        <div className="mt-4 flex items-center gap-1.5" aria-label="Choose project">
-          {projects.map((project, index) => <button type="button" key={project.id} onClick={() => setCurrent(index)} aria-label={`View ${project.title}`} className={`h-1.5 rounded-full transition-all ${index === current ? "w-9 bg-white/80" : "w-1.5 bg-white/35 hover:bg-white/60"}`} />)}
+        <div className="mt-3 flex items-center justify-center gap-1.5" aria-label="Choose project">
+          {projects.map((project, index) => <button type="button" key={project.id} onClick={() => setCurrent(index)} aria-label={`View ${project.title}`} className={`h-1.5 rounded-full transition-all ${index === current ? "w-9 bg-white/85" : "w-1.5 bg-white/35 hover:bg-white/60"}`} />)}
         </div>
       </div>
 
       <AnimatePresence>
-        {detailsOpen ? (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[70] grid place-items-center bg-black/55 p-4 backdrop-blur-xl" onClick={() => setDetailsOpen(false)}>
-            <motion.article initial={{ y: 28, opacity: 0, scale: 0.96 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 20, opacity: 0, scale: 0.97 }} transition={{ type: "spring", stiffness: 220, damping: 24 }} onClick={(event) => event.stopPropagation()} className="project-detail-modal relative grid max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-[2rem] md:grid-cols-[1.05fr_.95fr]">
-              <button type="button" onClick={() => setDetailsOpen(false)} aria-label="Close details" className="project-round-control absolute right-4 top-4 z-10"><X size={17} /></button>
-              <img src={active.image} alt={active.title} className="h-64 w-full object-cover md:h-full md:min-h-[34rem]" />
-              <div className="flex flex-col justify-between bg-stone-100/90 p-7 text-stone-900 backdrop-blur-3xl sm:p-9">
-                <div><p className="text-[10px] tracking-[0.2em] text-stone-500 uppercase">{active.type}</p><h2 className="mt-3 font-serif text-4xl leading-none sm:text-5xl">{active.title}</h2><p className="mt-5 text-sm leading-relaxed text-stone-600">{active.description}</p><div className="mt-7 flex flex-wrap gap-2">{active.technologies.map((technology) => <span key={technology} className="rounded-full border border-white/70 bg-white/50 px-3 py-1.5 text-[10px]">{technology}</span>)}</div></div>
-                <div className="mt-8 flex flex-wrap gap-2">{active.githubUrl ? <a href={active.githubUrl} target="_blank" rel="noreferrer" className="project-action"><GitHubMark /> GitHub</a> : null}{active.liveUrl ? <a href={active.liveUrl} target="_blank" rel="noreferrer" className="project-action"><ExternalLink size={14} /> Live demo</a> : null}{active.downloadUrl ? <a href={active.downloadUrl} target="_blank" rel="noreferrer" className="project-action"><Download size={14} /> Download</a> : null}</div>
-              </div>
-            </motion.article>
+        {selectedImage ? (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[80] grid place-items-center bg-black/75 p-4 backdrop-blur-2xl" onClick={() => setSelectedImage(null)}>
+            <button type="button" onClick={() => setSelectedImage(null)} aria-label="Close image" className="project-round-control absolute right-5 top-5"><X size={17} /></button>
+            <motion.img initial={{ scale: .94, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: .96, opacity: 0 }} src={selectedImage} alt={`${active.title} expanded interface`} onClick={(event) => event.stopPropagation()} className="max-h-[88vh] max-w-[94vw] rounded-2xl object-contain shadow-2xl" />
           </motion.div>
         ) : null}
       </AnimatePresence>
