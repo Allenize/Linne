@@ -4,8 +4,9 @@ import Footer from "@/components/Footer";
 
 export default function ProjectsPage() {
   return (
-    <main className="cinematic-page relative min-h-screen overflow-hidden">
+    <main className="bg-white">
       <Navbar />
+      <div className="pt-8 sm:pt-10" />
       <Projects />
       <Footer />
     </main>
